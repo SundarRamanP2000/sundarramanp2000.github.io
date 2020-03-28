@@ -1,4 +1,4 @@
-var elem = document.documentElement;
+//var elem = document.documentElement;
 /*
 function openFullscreen() {  // View in fullscreen
   if (elem.requestFullscreen) {
