@@ -15,7 +15,10 @@ function openFullscreen() {  // View in fullscreen
 var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup!
 var CANVAS_HEIGHT = $('body').height();
 var canvas = document.getElementById('canvas');
+if (canvas.getContext) 
 var ctx = canvas.getContext('2d');
+else
+alert('You need Safari or Firefox 1.5+ to see this demo.');
 canvas.width = CANVAS_WIDTH;
 canvas.height = CANVAS_HEIGHT;  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
 

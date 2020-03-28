@@ -2,7 +2,10 @@
 <canvas id="drawContainer" width="500" height="500" style="border: 1px solid #333"></canvas>
 <script>
 const canvas = document.getElementById('drawContainer');
+if (canvas.getContext) 
 const ctx = canvas.getContext('2d');
+else
+alert('You need Safari or Firefox 1.5+ to see this demo.');
 //let startPosition = {x: 0, y: 0};
 //let lineCoordinates = {x: 0, y: 0};
 //let isDrawStart = false;
@@ -12,7 +15,7 @@ var touchesInAction = {};
 var isDrawStart, startPosition, lineCoordinates;
 
 function arrow(ctx,p1,p2,size){
-	ctx.save();
+	//ctx.save();
 ctx.fillStyle = ctx.strokeStyle = '#099';
 	ctx.beginPath();
         	
@@ -36,7 +39,7 @@ console.log("length",len);
       ctx.lineTo(-size, size);
       ctx.closePath();
       ctx.fill();
-    ctx.restore();
+    //ctx.restore();
 }
 
 
@@ -98,14 +101,14 @@ var touches = getClientOffset(event);  //event.changedTouches;
 if(lineCoordinates!=undefined && startPosition!=undefined)
 {
 console.log('nopeee');
-  clearCanvas();
+  
+//clearCanvas();
 
   arrow(ctx,startPosition,lineCoordinates,10);
 }
 }
 
 function process_touchend(event) {
-
 event.preventDefault();
 var touches = getClientOffset(event);  //event.changedTouches;
 if(touches!=undefined)
