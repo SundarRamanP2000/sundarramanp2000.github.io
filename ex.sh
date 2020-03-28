@@ -2,4 +2,4 @@
 
 git add .
 git commit -m 'fi'
-echo "sundarramanp2000" "Sund@Priya1!" | git push
+echo "sundarramanp2000\n" "Sund@Priya1!\n" | git push
