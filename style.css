@@ -17,30 +17,14 @@ body {
     padding: 1rem;
 }
 
-:-webkit-full-screen {  /* Chrome, Safari and Opera syntax */
-  background-color: yellow;
-}
-
-:-moz-full-screen {  /* Firefox syntax */
-  background-color: yellow;
-}
-
-:-ms-fullscreen {  /* IE/Edge syntax */
-  background-color: yellow;
-}
-
-:fullscreen {  /* Standard syntax */
-  background-color: yellow;
-}
-
 @media screen and (orientation:portrait) {
     body {
         flex-direction: column;
         height: auto;
     }
     .canvas_container {
-        width: 50% !important;
-        min-width: 50% !important;
+        width: 100% !important;
+        min-width: 100% !important;
     }
 }
 
