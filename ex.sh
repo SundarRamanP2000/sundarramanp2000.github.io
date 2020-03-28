@@ -1,6 +1,5 @@
-#! /bin/bash
-name= "sundarramanp2000"
-roll= "Sund@Priya1!"
+#!/bin/bash
+
 git add .
 git commit -m 'fi'
-echo $name $roll | git push
+echo "sundarramanp2000" "Sund@Priya1!" | git push
