@@ -79,7 +79,7 @@ ctx.fillStyle = ctx.strokeStyle = '#099';
 //  ctx.beginPath();
     
 ctx.arc(startPosition.x,startPosition.y, r, 0, 2 * Math.PI);
-isDrawStart[j]=true;
+isDrawStart=true;
 }
 }
 
@@ -90,13 +90,11 @@ var touches = event.changedTouches;
 if(touches!=undefined)
 {
 console.log('nopeee');
-
-for(var j = 0; j < touches.length; j++) {
-  if(!isDrawStart[j]) {continue};
-  lineCoordinates[j]={x: touches[j].pageX, y: touches[j].pageY};
+  if(!isDrawStart) {return};
+  lineCoordinates=touches;
   clearCanvas();
 
-  arrow(ctx,startPosition[j],lineCoordinates[j],10);
+  arrow(ctx,startPosition,lineCoordinates,10);
 }
 }
 }
@@ -107,9 +105,7 @@ event.preventDefault();
 var touches = event.changedTouches;
 if(touches!=undefined)
 {console.log('jb');
-
-for(var j = 0; j < touches.length; j++)
-  isDrawStart[j]=false;
+  isDrawStart=false;
 }
 }
 //canvas.addEventListener('mousedown', mouseDownListener);
