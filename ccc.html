@@ -73,10 +73,10 @@ var touches = getClientOffset(event);  //event.touches;changedTouches;
 if(touches!=undefined)
 {
 startPosition=touches;
-console.log(startPosition);
+console.log('sg'+':'+startPosition);
 ctx.fillStyle = ctx.strokeStyle = '#099';
 
-//  ctx.beginPath();
+ctx.beginPath();
     
 ctx.arc(startPosition.x,startPosition.y, r, 0, 2 * Math.PI);
 isDrawStart=true;
@@ -90,7 +90,7 @@ var touches = event.changedTouches;
 if(touches!=undefined)
 {
 console.log('nopeee');
-  if(!isDrawStart) {return};
+  if(!isDrawStart) return;
   lineCoordinates=touches;
   clearCanvas();
 
