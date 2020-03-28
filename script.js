@@ -12,6 +12,7 @@ function openFullscreen() {  // View in fullscreen
   }
 }
 */
+var r=10;
 var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup
 var CANVAS_HEIGHT = $('body').height();
 var canvas = document.getElementById('canvas');
@@ -636,7 +637,6 @@ function generateBalls(params) {
     return balls;
 }
 
-var r=5;
 var ms = 30;
 var dt = ms / 1000;
 var balls = [];
@@ -658,7 +658,7 @@ function makeSim(populationSize, populationFixed, infectedSize, velocity, freeBe
     balls = generateBalls({
         style: 'random',
         n: populationSize,
-        r: 5,
+        r: r,
         velocity: velocity,
         infected: infectedSize,
         recoveryTime: recoveryTime,

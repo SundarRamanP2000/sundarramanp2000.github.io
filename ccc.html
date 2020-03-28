@@ -1,73 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-/* Chrome, Safari and Opera syntax */
-:-webkit-full-screen {
-  background-color: yellow;
-}
-
-/* Firefox syntax */
-:-moz-full-screen {
-  background-color: yellow;
-}
-
-/* IE/Edge syntax */
-:-ms-fullscreen {
-  background-color: yellow;
-}
-
-/* Standard syntax */
-:fullscreen {
-  background-color: yellow;
-}
-
-/* Style the button */
-button {
-  padding: 20px;
-  font-size: 20px;
-}
-</style>
-</head>
-<body>
-
-<h2>Fullscreen with JavaScript</h2>
-<p>Click on the "Open Fullscreen" button to open this page in fullscreen mode. Close it by either clicking the "Esc" key on your keyboard, or with the "Close Fullscreen" button.</p>
-
-<button onclick="openFullscreen();">Open Fullscreen</button>
-<button onclick="closeFullscreen();">Close Fullscreen</button>
-
+<canvas id="drawContainer" width="500" height="500" style="border: 1px solid #333"></canvas>
 <script>
-var elem = document.documentElement;
-function openFullscreen() {
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.mozRequestFullScreen) { /* Firefox */
-    elem.mozRequestFullScreen();
-  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) { /* IE/Edge */
-    elem.msRequestFullscreen();
-  }
+const canvasEle = document.getElementById('drawContainer');
+const context = canvasEle.getContext('2d');
+let startPosition = {x: 0, y: 0};
+let lineCoordinates = {x: 0, y: 0};
+let isDrawStart = false;
+
+    function edges(ctx,p1,p2,cutoff){
+      if (!cutoff) cutoff = 220; // alpha threshold
+      var dx = Math.abs(p2.x - p1.x), dy = Math.abs(p2.y - p1.y),
+          sx = p2.x > p1.x ? 1 : -1,  sy = p2.y > p1.y ? 1 : -1;
+      var x0 = Math.min(p1.x,p2.x), y0=Math.min(p1.y,p2.y);
+      var pixels = ctx.getImageData(x0,y0,dx+1,dy+1).data;
+      var hits=[], over=null;
+      for (x=p1.x,y=p1.y,e=dx-dy; x!=p2.x||y!=p2.y;){
+        var alpha = pixels[((y-y0)*(dx+1)+x-x0)*4 + 3];
+        if (over!=null && (over ? alpha<cutoff : alpha>=cutoff)){
+          hits.push({x:x,y:y});
+        }
+        var e2 = 2*e;
+        if (e2 > -dy){ e-=dy; x+=sx }
+        if (e2 <  dx){ e+=dx; y+=sy  }
+        over = alpha>=cutoff;
+      }
+      return hits;
+    }
+
+function arrow(ctx,p1,p2,size){
+      ctx.fillStyle = ctx.strokeStyle = '#099';
+      ctx.save();
+      var dx = p2.x-p1.x, dy=p2.y-p1.y, len=Math.sqrt(dx*dx+dy*dy);
+      ctx.translate(p2.x,p2.y);
+      ctx.rotate(Math.atan2(dy,dx));
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.lineTo(-len,0);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.lineTo(-size,-size);
+      ctx.lineTo(-size, size);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
 }
 
-function closeFullscreen() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if (document.mozCancelFullScreen) {
-    document.mozCancelFullScreen();
-  } else if (document.webkitExitFullscreen) {
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) {
-    document.msExitFullscreen();
-  }
+const getClientOffset = (event) => {
+    const {pageX, pageY} = event.touches ? event.touches[0] : event;
+    const x = pageX - canvasEle.offsetLeft;
+    const y = pageY - canvasEle.offsetTop;
+
+    return {
+       x,
+       y
+    } 
 }
+
+const drawLine = () => {
+   context.beginPath();
+   context.moveTo(startPosition.x, startPosition.y);
+   context.lineTo(lineCoordinates.x, lineCoordinates.y);
+   context.stroke();
+}
+
+const mouseDownListener = (event) => {
+   startPosition = getClientOffset(event);
+   isDrawStart = true;
+}
+
+const mouseMoveListener = (event) => {
+  if(!isDrawStart) return;
+  
+  lineCoordinates = getClientOffset(event);
+  clearCanvas();
+  arrow(context,{x: startPosition.x, y: startPosition.y},{x: lineCoordinates.x,y: lineCoordinates.y},10);
+}
+
+const mouseupListener = (event) => {
+  isDrawStart = false;
+}
+
+const clearCanvas = () => {
+   context.clearRect(0, 0, canvasEle.width, canvasEle.height);
+}
+
+canvasEle.addEventListener('mousedown', mouseDownListener);
+canvasEle.addEventListener('mousemove', mouseMoveListener);
+canvasEle.addEventListener('mouseup', mouseupListener);
+
+canvasEle.addEventListener('touchstart', mouseDownListener);
+canvasEle.addEventListener('touchmove', mouseMoveListener);
+canvasEle.addEventListener('touchend', mouseupListener);
 </script>
-
-<p>Note: Internet Explorer 10 and earlier does not support the msRequestFullscreen() method.</p>
-
-</body>
-</html>
-
-
