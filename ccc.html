@@ -72,13 +72,13 @@ event.preventDefault();
 var touches = getClientOffset(event);  //event.touches;changedTouches;
 if(touches!=undefined)
 {
-startPosition[j]=touches[j];
-console.log(j+":"+startPosition[j]);
-	ctx.fillStyle = ctx.strokeStyle = '#099';
+startPosition=touches;
+console.log(startPosition);
+ctx.fillStyle = ctx.strokeStyle = '#099';
 
-  ctx.beginPath();
+//  ctx.beginPath();
     
-ctx.arc(startPosition[j].x,startPosition[j].y, r, 0, 2 * Math.PI);
+ctx.arc(startPosition.x,startPosition.y, r, 0, 2 * Math.PI);
 isDrawStart[j]=true;
 }
 }
