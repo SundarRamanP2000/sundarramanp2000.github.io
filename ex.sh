@@ -5,4 +5,5 @@ git commit -m 'fi'
 git push 
 expect "Username for 'https://github.com': "
 send "$name"
+send "\n"
 
