@@ -1,14 +1,10 @@
-/*
-	Set up canvas.
-*/
-var CANVAS_WIDTH = $('.canvas_container').width();
+var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup
 var CANVAS_HEIGHT = $('body').height();
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 canvas.width = CANVAS_WIDTH;
 canvas.height = CANVAS_HEIGHT;
 var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
-
 
 var gcounter = 0;
 var slowVal = 2;
@@ -40,11 +36,7 @@ var stateProxy = new Proxy(stateCount, {
     }
 });
 
-
-/*
-	Minimum Priority Queue (MinPQ) constructor
-*/
-function MinPQ() {
+function MinPQ() { //Minimum Priority Queue
     this.heap = [null];
     this.n = 0;
 
@@ -109,11 +101,7 @@ function MinPQ() {
     };
 }
 
-
-/*
-	Ball constructor
-*/
-function Ball(posX, posY, velX, velY, r, recoveryTime, hospitalTime) {
+function Ball(posX, posY, velX, velY, r, recoveryTime, hospitalTime) {  //Ball constructor
     this.p = { x: posX, y: posY };
     this.v = { x: velX, y: velY };
     this.vold = { x: velX, y: velY };
@@ -121,38 +109,17 @@ function Ball(posX, posY, velX, velY, r, recoveryTime, hospitalTime) {
     this.healtimer = recoveryTime;
     this.hospitaltimer = hospitalTime;
     this.partner = null;
-
-
     var s = 0 // 0:uninfected, 1:infected, 2:healed, 3: dead, 4:hospital
-        //s meint den Status des punktes (infiziert/nichtinfiziert)
-
     var m = Math.ceil(Math.PI * r * r);
 
     var vabs = 0
 
-
-    // Basic move/draw
-    this.move = function(dt) {
+    this.move = function(dt) { //Basic move/draw
         this.p.x = this.p.x + this.v.x * dt;
         this.p.y = this.p.y + this.v.y * dt;
-
-        /*if(this.p.x > CANVAS_WIDTH){
-        	this.p.x = CANVAS_WIDTH - this.r*2;
-        }
-        if(this.p.x < 0){
-        	this.p.x = 0 + this.r*2;
-        }
-
-        if(this.p.y > CANVAS_HEIGHT){
-        	this.p.y = CANVAS_HEIGHT - this.r*2;
-        }
-        if(this.p.y < 0){
-        	this.p.y = 0 + this.r*2;
-        }*/
     };
 
     this.draw = function() {
-
         if (this.s == 1) {
             this.healtimer -= 1;
             if (this.healtimer == 0) {
@@ -234,7 +201,7 @@ function Ball(posX, posY, velX, velY, r, recoveryTime, hospitalTime) {
                 ctx.fillStyle = "#000000";
                 break;
             case 4:
-                ctx.fillStyle = "#ff4444";
+                ctx.fillStyle = "#698b47";//"#ff4444";
         }
 
         ctx.fill();
@@ -266,7 +233,6 @@ function Ball(posX, posY, velX, velY, r, recoveryTime, hospitalTime) {
         var R = ball.r + this.r;
         var D = dpdv * dpdv - dvdv * (dpdp - R * R);
         if (D < 0) { return Number.POSITIVE_INFINITY; }
-        //console.log('Predicted: ' + (-(dpdv + Math.sqrt(D))/dvdv) )
         return (-(dpdv + Math.sqrt(D)) / dvdv);
     };
     this.timeToHitVerticalWall = function() {
@@ -435,41 +401,24 @@ function Sim(balls) {
         if (ball == null) { return; }
         var dt;
         for (var i = 0; i < this.balls.length; i++) {
-            //
-            //
-            // Uncomment this once the wall collisions are working,
-            // AND isValid() is complete.
-            //
-            //
-
             dt = ball.timeToHit(balls[i]);
             if (!isFinite(dt) || dt <= 0) { continue; }
             this.pq.insert(new SimEvent(this.time + dt, ball, balls[i]));
-            //console.log('Ball event inserted');
-
         }
         dt = ball.timeToHitVerticalWall();
         if (isFinite(dt) && dt > 0) {
-            //console.log('Vert event inserted');
             this.pq.insert(new SimEvent(this.time + dt, null, ball));
         }
         dt = ball.timeToHitHorizontalWall();
         if (isFinite(dt) && dt > 0) {
-            //console.log('Horiz event inserted');
             this.pq.insert(new SimEvent(this.time + dt, ball, null));
         }
     };
+
     this.predictBalls = function(ball) {
         if (ball == null) { return; }
         var dt;
         for (var i = 0; i < this.balls.length; i++) {
-            //
-            //
-            // Uncomment this once the wall collisions are working,
-            // AND isValid() is complete.
-            //
-            //
-
             dt = ball.timeToHit(balls[i]);
             if (!isFinite(dt) || dt <= 0) { continue; }
             this.pq.insert(new SimEvent(this.time + dt, ball, balls[i]));
@@ -480,7 +429,6 @@ function Sim(balls) {
         if (ball == null) { return; }
         var dt = ball.timeToHitVerticalWall();
         if (isFinite(dt) && dt > 0) {
-            //console.log('Vert event inserted');
             this.pq.insert(new SimEvent(this.time + dt, null, ball));
         }
     };
@@ -488,7 +436,6 @@ function Sim(balls) {
         if (ball == null) { return; }
         var dt = ball.timeToHitHorizontalWall();
         if (isFinite(dt) && dt > 0) {
-            //console.log('Horiz event inserted');
             this.pq.insert(new SimEvent(this.time + dt, ball, null));
         }
     };
@@ -500,8 +447,7 @@ function Sim(balls) {
     this.redraw = function() {
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         for (var i = 0; i < this.balls.length; i++) {
-            balls[i].draw();
-
+         balls[i].draw();
         }
         gcounter += 1;
     };
@@ -676,37 +622,13 @@ function generateBalls(params) {
     return balls;
 }
 
-
-/*
-	Running the simulation
-*/
-
 var ms = 30;
 var dt = ms / 1000;
 var balls = [];
 var sim;
 var time = 0;
-var chart;
-
-function addEntries() {
-    chart.data.labels.push(time);
-
-    var updateArray = [];
-    updateArray.push(stateProxy.dead);
-    updateArray.push(stateProxy.uninfected);
-    updateArray.push(stateProxy.infected);
-    updateArray.push(stateProxy.healed);
-
-    var c = 0;
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(updateArray[c++]);
-    });
-
-    chart.update();
-}
 
 function makeSim(populationSize, populationFixed, infectedSize, velocity, freeBeds, recoveryTime, hospitalTime) {
-
     stateProxy.root_population = populationSize
     stateProxy.population = populationSize
     stateProxy.infected = infectedSize
@@ -717,70 +639,6 @@ function makeSim(populationSize, populationFixed, infectedSize, velocity, freeBe
     stateProxy.diedBecauseOfNoBed = 0;
 
     var ctx = document.getElementById('chart').getContext('2d');
-    chart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'line',
-        beginAtZero: true,
-
-        // The data for our dataset
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Dead',
-                backgroundColor: '#000000',
-                borderColor: '#000000',
-                fill: 0,
-                pointRadius: 1,
-                data: []
-            }, {
-                label: 'Uninfected',
-                backgroundColor: '#8c8c8c',
-                borderColor: '#8c8c8c',
-                fill: 1,
-                pointRadius: 1,
-                data: []
-            }, {
-                label: 'Infected',
-                backgroundColor: '#ff4444',
-                borderColor: '#ff4444',
-                fill: 2,
-                pointRadius: 1,
-                data: []
-            }, {
-                label: 'Healed',
-                backgroundColor: '#00C851',
-                borderColor: '#00C851',
-                fill: 3,
-                pointRadius: 1,
-                data: []
-            }]
-        },
-
-        // Configuration options go here
-        options: {
-            maintainAspectRatio: false,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        suggestedMin: 0,
-                        suggestedMax: stateProxy.root_population,
-                        stepSize: Math.round(stateProxy.root_population / 10)
-                    }
-                }]
-            },
-            plugins: {
-                filler: {
-                    propagate: true
-                }
-            }
-        }
-    });
-    time = 0;
-    chart.data.datasets.forEach((dataset) => {
-        dataset.data = [];
-    });
-
-
 
     balls = generateBalls({
         style: 'random',
@@ -811,7 +669,7 @@ function deactivateInterval() {
 }
 
 function runSim() {
-    if (time++ % 7 === 0) addEntries();
+  //  if (time++ % 7 === 0) addEntries();
 
     sim.redraw();
     try {
