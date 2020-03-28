@@ -12,8 +12,9 @@ var touchesInAction = {};
 var isDrawStart, startPosition, lineCoordinates;
 
 function arrow(ctx,p1,p2,size){
-      ctx.fillStyle = ctx.strokeStyle = '#099';
      ctx.save();
+	console.log(p1.x,p1.y,p2.x,p2.y);
+
       var dx = p2.x-p1.x, dy=p2.y-p1.y, len=Math.sqrt(dx*dx+dy*dy);
       ctx.translate(p2.x,p2.y);
       ctx.rotate(Math.atan2(dy,dx));
@@ -124,6 +125,6 @@ canvas.addEventListener('touchend', process_touchend,false);
 someElement.addEventListener('touchstart', process_touchstart, false);
 someElement.addEventListener('touchmove', process_touchmove, false);
 someElement.addEventListener('touchend', process_touchend, false);*/
-//4
+//5
 </script>
 
