@@ -40,8 +40,8 @@ hr {
 .canvas_container {
     display: block;
     height: 100%;
-    width: 50%;
-    min-width: 50%;
+    width: 100%;
+    min-width: 100%;
 }
 
 #canvas {
