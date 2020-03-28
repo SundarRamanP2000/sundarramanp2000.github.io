@@ -44,7 +44,7 @@ function arrow(ctx,p1,p2,size){
       ctx.lineTo(-size, size);
       ctx.closePath();
       ctx.fill();
-      ctx.restore();
+    	ctx.restore();
 
 }
 
@@ -81,6 +81,7 @@ const mouseMoveListener = (event) => {
 
 const mouseupListener = (event) => {
   isDrawStart = false;
+	
 }
 
 const clearCanvas = () => {

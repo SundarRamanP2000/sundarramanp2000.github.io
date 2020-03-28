@@ -37,6 +37,13 @@ hr {
     border-top: 0.1rem solid #ccc !important;
 }
 
+.lock-screen {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+    position: fixed;
+}
+
 .canvas_container {
     display: block;
     height: 100%;
