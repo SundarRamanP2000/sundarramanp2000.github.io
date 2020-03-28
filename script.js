@@ -1,3 +1,17 @@
+var elem = document.documentElement;
+
+function openFullscreen() {  // View in fullscreen
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+}
+
 var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup
 var CANVAS_HEIGHT = $('body').height();
 var canvas = document.getElementById('canvas');
