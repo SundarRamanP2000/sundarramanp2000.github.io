@@ -87,7 +87,7 @@ isDrawStart=true;
 
 function process_touchmove(event){
 event.preventDefault();
-var touches = event.changedTouches;
+var touches = getClientOffset(event);  //event.changedTouches;
 
 if(touches!=undefined)
 {
@@ -103,7 +103,7 @@ console.log('nopeee');
 function process_touchend(event) {
 
 event.preventDefault();
-var touches = event.changedTouches;
+var touches = getClientOffset(event);  //event.changedTouches;
 if(touches!=undefined)
 {console.log('jb');
   isDrawStart=false;
