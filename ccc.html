@@ -1,4 +1,4 @@
-<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<!meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <canvas id="drawContainer" width="500" height="500" style="border: 1px solid #333"></canvas>
 <script>
 const canvas = document.getElementById('drawContainer');
@@ -30,13 +30,13 @@ function arrow(ctx,p1,p2,size){
       ctx.closePath();
       ctx.fill();
     ctx.restore();
-
 }
+
 
 const getClientOffset = (event) => {
     const {pageX, pageY} = event.touches ? event.touches[0] : event;
-    const x = pageX - canvasEle.offsetLeft;
-    const y = pageY - canvasEle.offsetTop;
+    const x = pageX - canvas.offsetLeft;
+    const y = pageY - canvas.offsetTop;
 
     return {
        x,
@@ -69,10 +69,16 @@ const clearCanvas = () => {
 function process_touchstart(event)
 {
 event.preventDefault();
-var touches = event.changedTouches;
-for(var j = 0; j < touches.length; j++) {
-startPosition[j]={x: touches[j].pageX, y: touches[j].pageY};
-ctx.arc(touches[j].pageX-canvas.offsetLeft,touches[j].pageY-canvas.offsetTop, r, 0, 2 * Math.PI);
+var touches = getClientOffset(event);  //event.touches;changedTouches;
+if(touches!=undefined)
+{
+startPosition[j]=touches[j];
+console.log(j+":"+startPosition[j]);
+	ctx.fillStyle = ctx.strokeStyle = '#099';
+
+  ctx.beginPath();
+    
+ctx.arc(startPosition[j].x,startPosition[j].y, r, 0, 2 * Math.PI);
 isDrawStart[j]=true;
 }
 }
@@ -80,27 +86,43 @@ isDrawStart[j]=true;
 function process_touchmove(event){
 event.preventDefault();
 var touches = event.changedTouches;
+
+if(touches!=undefined)
+{
+console.log('nopeee');
+
 for(var j = 0; j < touches.length; j++) {
   if(!isDrawStart[j]) {continue};
   lineCoordinates[j]={x: touches[j].pageX, y: touches[j].pageY};
   clearCanvas();
-  arrow(ctx,{x: startPosition[j].x, y: startPosition[j].y},{x: lineCoordinates[j].x,y: lineCoordinates[j].y},10);
+
+  arrow(ctx,startPosition[j],lineCoordinates[j],10);
+}
 }
 }
 
-function process_touchend{
+function process_touchend(event) {
+
 event.preventDefault();
 var touches = event.changedTouches;
+if(touches!=undefined)
+{console.log('jb');
+
 for(var j = 0; j < touches.length; j++)
   isDrawStart[j]=false;
+}
 }
 //canvas.addEventListener('mousedown', mouseDownListener);
 //canvas.addEventListener('mousemove', mouseMoveListener);
 //canvas.addEventListener('mouseup', mouseupListener);
+canvas.addEventListener('mousedown', process_touchstart,false);
+canvas.addEventListener('mousemove', process_touchmove,false);
+//canvas.addEventListener('touchcancel', process_touchcancel, false);
+canvas.addEventListener('mouseup', process_touchend,false);
 
 canvas.addEventListener('touchstart', process_touchstart,false);
 canvas.addEventListener('touchmove', process_touchmove,false);
-//someElement.addEventListener('touchcancel', process_touchcancel, false);
+//canvas.addEventListener('touchcancel', process_touchcancel, false);
 canvas.addEventListener('touchend', process_touchend,false);
 /*
 someElement.addEventListener('touchstart', process_touchstart, false);
