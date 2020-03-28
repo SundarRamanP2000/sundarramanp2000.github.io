@@ -622,6 +622,7 @@ function generateBalls(params) {
     return balls;
 }
 
+var r=5;
 var ms = 30;
 var dt = ms / 1000;
 var balls = [];
@@ -676,6 +677,82 @@ function runSim() {
         console.log(e);
         window.clearInterval(interval);
     }
+}
+
+var mouseX,mouseY,mouseDown=0,touchX,touchY;
+
+function sketchpad_mouseDown() {
+        mouseDown=1;
+	var newBall;
+        if (mouseDown==1) {
+		newBall=new Ball(mouseX,mouseY,0,0,r,150,150);           //posNeg() * Math.floor(vx),posNeg() * Math.floor(vy),r,params.recoveryTime,params.hospitalTime);
+		balls.push(newBall);  //drawDot(ctx,mouseX,mouseY,12);
+        }
+}
+
+function sketchpad_mouseUp() {
+        mouseDown=0;
+}
+
+function sketchpad_mouseMove(e) { 
+        getMousePos(e);
+	var newBall;
+        if (mouseDown==1) {
+		newBall=new Ball(mouseX,mouseY,0,0,r,150,150);                //posNeg() * Math.floor(vx),posNeg() * Math.floor(vy),r,params.recoveryTime,params.hospitalTime);
+		balls.push(newBall);  //drawDot(ctx,mouseX,mouseY,12);
+        }
+}
+
+function getMousePos(e) {
+	if (!e)
+	        var e = event;
+        if (e.offsetX) {
+            mouseX = e.offsetX;
+            mouseY = e.offsetY;
+        }
+        else if (e.layerX) {
+            mouseX = e.layerX;
+            mouseY = e.layerY;
+        }
+}
+
+function sketchpad_touchStart() {
+	getTouchPos();
+	ball=new Ball(touchX,touchY,0,0,r,150,150);                               //posNeg() * Math.floor(vx),posNeg() * Math.floor(vy),r,params.recoveryTime,params.hospitalTime);
+	balls.push(newBall);  //drawDot(ctx,touchX,touchY,12);
+        event.preventDefault();
+}
+
+function sketchpad_touchMove(e) { 
+	getTouchPos(e);
+	var newBall;
+        if (mouseDown==1) {
+		newBall=new Ball(mouseX,mouseY,0,0,r,150,150);                       //posNeg() * Math.floor(vx),posNeg() * Math.floor(vy),r,params.recoveryTime,params.hospitalTime);
+		balls.push(newBall);  //drawDot(ctx,mouseX,mouseY,12);
+        }
+	event.preventDefault();
+}
+
+function getTouchPos(e) {
+	if (!e)
+	    var e = event;
+        if(e.touches) {
+            if (e.touches.length == 1) {  //Only deal with one finger                                 --multi touch functionality.
+                var touch = e.touches[0];  //Get the information for finger #1
+                touchX=touch.pageX-touch.target.offsetLeft;
+                touchY=touch.pageY-touch.target.offsetTop;
+            }
+        }
+}
+
+function init() {
+	if (ctx) {
+	    canvas.addEventListener('mousedown', sketchpad_mouseDown, false);
+            canvas.addEventListener('mousemove', sketchpad_mouseMove, false);
+            window.addEventListener('mouseup', sketchpad_mouseUp, false);
+            canvas.addEventListener('touchstart', sketchpad_touchStart, false);
+            canvas.addEventListener('touchmove', sketchpad_touchMove, false);
+        	}
 }
 
 var sliderPopulation = document.getElementById("populationRange");
