@@ -90,11 +90,11 @@ function process_touchmove(event){
 event.preventDefault();
 var touches = getClientOffset(event);  //event.changedTouches;
  if(!isDrawStart) return;
+  lineCoordinates=touches;
  
-if(touches!=undefined)
+if(lineCoordinates!=undefined && startPosition!=undefined)
 {
 console.log('nopeee');
-  lineCoordinates=touches;
   clearCanvas();
 
   arrow(ctx,startPosition,lineCoordinates,10);
