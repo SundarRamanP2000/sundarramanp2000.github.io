@@ -73,12 +73,13 @@ var touches = getClientOffset(event);  //event.touches;changedTouches;
 if(touches!=undefined)
 {
 startPosition=touches;
-console.log('sg'+':'+startPosition);
+console.log('sg',startPosition.x,startPosition.y);
 ctx.fillStyle = ctx.strokeStyle = '#099';
 
 ctx.beginPath();
     
 ctx.arc(startPosition.x,startPosition.y, r, 0, 2 * Math.PI);
+ctx.fill();
 isDrawStart=true;
 }
 }
