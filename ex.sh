@@ -1,6 +1,8 @@
-${name}=sundarramanp2000
-${pwd}=Sund@Priya1!
+set name "sundarramanp2000"
+set roll "Sund@Priya1!"
 git add .
 git commit -m 'fi'
-git push ${name} ${pwd}
+git push 
+expect "Username for 'https://github.com':"
+send "$name"
 
