@@ -680,7 +680,7 @@ function runSim() {
 }
 
 var mouseX,mouseY,mouseDown=0,touchX,touchY;
-
+/*
 function sketchpad_mouseDown() {
         mouseDown=1;
 	var newBall;
@@ -715,7 +715,7 @@ function getMousePos(e) {
             mouseY = e.layerY;
         }
 }
-
+*/
 function sketchpad_touchStart() {
 	getTouchPos();
 	ball=new Ball(touchX,touchY,0,0,r,150,150);                               //posNeg() * Math.floor(vx),posNeg() * Math.floor(vy),r,params.recoveryTime,params.hospitalTime);
@@ -747,9 +747,9 @@ function getTouchPos(e) {
 
 function init() {
 	if (ctx) {
-	    canvas.addEventListener('mousedown', sketchpad_mouseDown, false);
-            canvas.addEventListener('mousemove', sketchpad_mouseMove, false);
-            window.addEventListener('mouseup', sketchpad_mouseUp, false);
+	//    canvas.addEventListener('mousedown', sketchpad_mouseDown, false);
+          //  canvas.addEventListener('mousemove', sketchpad_mouseMove, false);
+           // window.addEventListener('mouseup', sketchpad_mouseUp, false);
             canvas.addEventListener('touchstart', sketchpad_touchStart, false);
             canvas.addEventListener('touchmove', sketchpad_touchMove, false);
         	}
