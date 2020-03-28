@@ -39,8 +39,8 @@ body {
         height: auto;
     }
     .canvas_container {
-        width: 100% !important;
-        min-width: 100% !important;
+        width: 50% !important;
+        min-width: 50% !important;
     }
 }
 
