@@ -1,10 +1,15 @@
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <canvas id="drawContainer" width="500" height="500" style="border: 1px solid #333"></canvas>
 <script>
-const canvasEle = document.getElementById('drawContainer');
-const context = canvasEle.getContext('2d');
-let startPosition = {x: 0, y: 0};
-let lineCoordinates = {x: 0, y: 0};
-let isDrawStart = false;
+const canvas = document.getElementById('drawContainer');
+const ctx = canvas.getContext('2d');
+//let startPosition = {x: 0, y: 0};
+//let lineCoordinates = {x: 0, y: 0};
+//let isDrawStart = false;
+
+var r=7;
+var touchesInAction = {};
+var isDrawStart, startPosition, lineCoordinates;
 
 function arrow(ctx,p1,p2,size){
       ctx.fillStyle = ctx.strokeStyle = '#099';
@@ -58,14 +63,47 @@ const mouseupListener = (event) => {
 }
 
 const clearCanvas = () => {
-   context.clearRect(0, 0, canvasEle.width, canvasEle.height);
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-canvasEle.addEventListener('mousedown', mouseDownListener);
-canvasEle.addEventListener('mousemove', mouseMoveListener);
-canvasEle.addEventListener('mouseup', mouseupListener);
+function process_touchstart(event)
+{
+event.preventDefault();
+var touches = event.changedTouches;
+for(var j = 0; j < touches.length; j++) {
+startPosition[j]={x: touches[j].pageX, y: touches[j].pageY};
+ctx.arc(touches[j].pageX-canvas.offsetLeft,touches[j].pageY-canvas.offsetTop, r, 0, 2 * Math.PI);
+isDrawStart[j]=true;
+}
+}
 
-canvasEle.addEventListener('touchstart', mouseDownListener);
-canvasEle.addEventListener('touchmove', mouseMoveListener);
-canvasEle.addEventListener('touchend', mouseupListener);
+function process_touchmove(event){
+event.preventDefault();
+var touches = event.changedTouches;
+for(var j = 0; j < touches.length; j++) {
+  if(!isDrawStart[j]) {continue};
+  lineCoordinates[j]={x: touches[j].pageX, y: touches[j].pageY};
+  clearCanvas();
+  arrow(ctx,{x: startPosition[j].x, y: startPosition[j].y},{x: lineCoordinates[j].x,y: lineCoordinates[j].y},10);
+}
+}
+
+function process_touchend{
+event.preventDefault();
+var touches = event.changedTouches;
+for(var j = 0; j < touches.length; j++)
+  isDrawStart[j]=false;
+}
+//canvas.addEventListener('mousedown', mouseDownListener);
+//canvas.addEventListener('mousemove', mouseMoveListener);
+//canvas.addEventListener('mouseup', mouseupListener);
+
+canvas.addEventListener('touchstart', process_touchstart,false);
+canvas.addEventListener('touchmove', process_touchmove,false);
+//someElement.addEventListener('touchcancel', process_touchcancel, false);
+canvas.addEventListener('touchend', process_touchend,false);
+/*
+someElement.addEventListener('touchstart', process_touchstart, false);
+someElement.addEventListener('touchmove', process_touchmove, false);
+someElement.addEventListener('touchend', process_touchend, false);*/
 </script>

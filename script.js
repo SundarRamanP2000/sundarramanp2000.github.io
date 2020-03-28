@@ -12,23 +12,24 @@ function openFullscreen() {  // View in fullscreen
   }
 }
 */
-var r=10;
-var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup
+var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup!
 var CANVAS_HEIGHT = $('body').height();
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 canvas.width = CANVAS_WIDTH;
-canvas.height = CANVAS_HEIGHT;
-var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
+canvas.height = CANVAS_HEIGHT;  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
 
-var gcounter = 0;
+var gcounter = 0;  //Global variables setup!
 var slowVal = 2;
 var stateCount = { uninfected: 0, deadinfected: 0, healed: 0, dead: 0, freeBeds: 0, diedBecauseOfNoBed: 0 }
+var r=7;  //Radius
+var Population=, parseInt(sliderPopulationFixed.value), parseInt(sliderInfected.value), parseInt(sliderVelocity.value), parseInt(sliderHospital.value), parseInt(sliderRecoveryTime.value), parseInt(sliderHospitalTime.value)
+
 
 var stateProxy = new Proxy(stateCount, {
     set: function(target, key, value) {
         target[key] = value;
-
+/*
         var outputStatUninfected = document.getElementById("statUninfected");
         outputStatUninfected.innerHTML = stateCount.uninfected + " (" + Math.round(100 * parseFloat(stateProxy.uninfected) / parseFloat(stateProxy.root_population)) + "%)"
 
@@ -46,7 +47,7 @@ var stateProxy = new Proxy(stateCount, {
 
         var outputStatFreeBeds = document.getElementById("statDiedBecauseOfNoBed");
         outputStatFreeBeds.innerHTML = stateCount.diedBecauseOfNoBed
-
+*/
         return true;
     }
 });
