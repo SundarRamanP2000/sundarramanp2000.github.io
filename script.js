@@ -669,8 +669,6 @@ function deactivateInterval() {
 }
 
 function runSim() {
-  //  if (time++ % 7 === 0) addEntries();
-
     sim.redraw();
     try {
         sim.simulate(dt);
