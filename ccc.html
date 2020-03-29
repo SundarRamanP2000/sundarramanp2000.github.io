@@ -1,9 +1,19 @@
 <!meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<canvas id="drawContainer" width="500" height="500" style="border: 1px solid #333"></canvas>
+<!canvas id="drawContainer" width="500" height="500" style="border: 1px solid #333"></canvas>
+<div style="position: relative;">
+ <canvas id="layer1" width="500" height="500" style="position: absolute; left: 0; top: 0; z-index: 0; border: 1px solid #333;"></canvas>
+ <canvas id="layer2" width="500" height="500" style="position: absolute; left: 0; top: 0; z-index: 1; border: 1px solid #333;"></canvas>
+</div>
 <script>
-const canvas = document.getElementById('drawContainer');
+//const canvas = document.getElementById('drawContainer');
+//const ctx = canvas.getContext('2d');
 
+const canvas = document.getElementById('layer1');
 const ctx = canvas.getContext('2d');
+const canvas1 = document.getElementById('layer2');
+const ctx1 = canvas1.getContext('2d');
+
+//const ctx1 = canvas1.getContext('2d');
 //else
 //alert('You need Safari or Firefox 1.5+ to see this demo.');
 
@@ -17,13 +27,53 @@ var touchesInAction = {};
 var isDrawStart, startPosition, lineCoordinates;
 
 
-  var arrow = 
+  var Arrow = 
                 {
                     h: 5,
                     w: 10
                 };
+/*
+function drawLineWithArrowhead(p0,p1,headLength){
+
+  // constants (could be declared as globals outside this function)
+  var PI=Math.PI;
+  var degreesInRadians225=225*PI/180;
+  var degreesInRadians135=135*PI/180;
+
+  // calc the angle of the line
+  var dx=p1.x-p0.x;
+  var dy=p1.y-p0.y;
+  var angle=Math.atan2(dy,dx);
+
+  // calc arrowhead points
+  var x225=p1.x+headLength*Math.cos(angle+degreesInRadians225);
+  var y225=p1.y+headLength*Math.sin(angle+degreesInRadians225);
+  var x135=p1.x+headLength*Math.cos(angle+degreesInRadians135);
+  var y135=p1.y+headLength*Math.sin(angle+degreesInRadians135);
+
+  // draw line plus arrowhead
+  ctx.beginPath();
+  // draw the line from p0 to p1
+  ctx.moveTo(p0.x,p0.y);
+  ctx.lineTo(p1.x,p1.y);
+  // draw partial arrowhead at 225 degrees
+  ctx.moveTo(p1.x,p1.y);
+  ctx.lineTo(x225,y225);
+  // draw partial arrowhead at 135 degrees
+  ctx.moveTo(p1.x,p1.y);
+  ctx.lineTo(x135,y135);
+  // stroke the line and arrowhead
+  ctx.stroke();
+}
 
 
+function getAngleBetweenPoints(originPt, endPt) {
+        var interPt = { x: endPt.x - originPt.x,
+            y: endPt.y - originPt.y
+        };
+
+        return Math.atan2(interPt.y, interPt.x) * 180 / Math.PI;
+    }
 function drawArrow(canvasContext, arrow, ptArrow, endPt) {    
         var angleInDegrees = getAngleBetweenPoints(ptArrow, endPt);
 
@@ -48,37 +98,45 @@ function drawArrow(canvasContext, arrow, ptArrow, endPt) {
         // restore the context to its untranslated/unrotated state
         canvasContext.restore();
     }
+*/
 
+/*
+var dataURL;
+var image=new Image();
+image.onload=function(){
+    ctx.drawImage(image,0,0);
+}
+image.src=dataURL;
+*/
 
-function arrow(ctx,p1,p2,size){
-	ctx.save();
-ctx.fillStyle = ctx.strokeStyle = '#099';
-	ctx.beginPath();
+function arrow(ctx_internal,p1,p2,size){
+	ctx_internal.save();
+ctx_internal.fillStyle = ctx_internal.strokeStyle = '#099';
+	ctx_internal.beginPath();
         	
 console.log(p1.x,p1.y,p2.x,p2.y);
 
-     ctx.arc(startPosition.x,startPosition.y, r, 0, 2 * Math.PI);
-     ctx.fill();
+     ctx_internal.arc(startPosition.x,startPosition.y, r, 0, 2 * Math.PI);
+     ctx_internal.fill();
      var dx = p2.x-p1.x, dy=p2.y-p1.y, len=Math.sqrt(dx*dx+dy*dy);
 console.log("length",len);
-      ctx.translate(p2.x,p2.y);
-      ctx.rotate(Math.atan2(dy,dx));
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(0,0);
-      ctx.lineTo(-len,0);
-      ctx.closePath();
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(0,0);
-      ctx.lineTo(-size,-size);
-      ctx.lineTo(-size, size);
-      ctx.closePath();
-      ctx.fill();
-    ctx.restore();
+      ctx_internal.translate(p2.x,p2.y);
+      ctx_internal.rotate(Math.atan2(dy,dx));
+      ctx_internal.lineCap = 'round';
+      ctx_internal.beginPath();
+      ctx_internal.moveTo(0,0);
+      ctx_internal.lineTo(-len,0);
+      ctx_internal.closePath();
+      ctx_internal.stroke();
+      ctx_internal.beginPath();
+      ctx_internal.moveTo(0,0);
+      ctx_internal.lineTo(-size,-size);
+      ctx_internal.lineTo(-size, size);
+      ctx_internal.closePath();
+      ctx_internal.fill();
+      ctx_internal.restore();
+ 	
 }
-
-
 const getClientOffset = (event) => {
     const {pageX, pageY} = event.touches ? event.touches[0] : event;
     const x = pageX - canvas.offsetLeft;
@@ -99,7 +157,7 @@ const mouseMoveListener = (event) => {
   if(!isDrawStart) return;
   
   lineCoordinates = getClientOffset(event);
-  clearCanvas();
+  clearCanvas(ctx);
   arrow(context,{x: startPosition.x, y: startPosition.y},{x: lineCoordinates.x,y: lineCoordinates.y},10);
 }
 
@@ -108,8 +166,8 @@ const mouseupListener = (event) => {
 	
 }
 
-const clearCanvas = () => {
-   ctx.clearRect(0, 0, canvas.width, canvas.height);
+function clearCanvas(ctx_internal) {
+   ctx_internal.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function process_touchstart(event)
@@ -137,10 +195,17 @@ var touches = getClientOffset(event);  //event.changedTouches;
 if(lineCoordinates!=undefined && startPosition!=undefined)
 {
 console.log('nopeee');
-  
-clearCanvas();
+  //ctx.save();
 
-  arrow(ctx,startPosition,lineCoordinates,10);
+
+clearCanvas(ctx1);
+
+
+//ctx.restore();
+//drawLineWithArrowhead(startPosition,lineCoordinates,10);
+//ctx.restore();
+//drawArrow(ctx,Arrow,startPosition,lineCoordinates);
+  arrow(ctx1,startPosition,lineCoordinates,10);
 }
 }
 
@@ -149,8 +214,10 @@ event.preventDefault();
 var touches = getClientOffset(event);  //event.changedTouches;
 if(touches!=undefined)
 {console.log('jb');
+//ctx.restore();
+clearCanvas(ctx1);	
   isDrawStart=false;
-}
+}	
 }
 //canvas.addEventListener('mousedown', mouseDownListener);
 //canvas.addEventListener('mousemove', mouseMoveListener);
@@ -164,6 +231,17 @@ canvas.addEventListener('touchstart', process_touchstart,false);
 canvas.addEventListener('touchmove', process_touchmove,false);
 //canvas.addEventListener('touchcancel', process_touchcancel, false);
 canvas.addEventListener('touchend', process_touchend,false);
+
+canvas1.addEventListener('mousedown', process_touchstart,false);
+canvas1.addEventListener('mousemove', process_touchmove,false);
+//canvas1.addEventListener('touchcancel', process_touchcancel, false);
+canvas1.addEventListener('mouseup', process_touchend,false);
+
+canvas1.addEventListener('touchstart', process_touchstart,false);
+canvas1.addEventListener('touchmove', process_touchmove,false);
+//canvas1.addEventListener('touchcancel', process_touchcancel, false);
+canvas1.addEventListener('touchend', process_touchend,false);
+
 /*
 someElement.addEventListener('touchstart', process_touchstart, false);
 someElement.addEventListener('touchmove', process_touchmove, false);

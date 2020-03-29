@@ -1,4 +1,4 @@
-//var elem = document.documentElement;
+2//var elem = document.documentElement;
 /*
 function openFullscreen() {  // View in fullscreen
   if (elem.requestFullscreen) {
@@ -26,13 +26,13 @@ var gcounter = 0;  //Global variables setup!
 var slowVal = 2;
 var stateCount = { uninfected: 0, deadinfected: 0, healed: 0, dead: 0, freeBeds: 0, diedBecauseOfNoBed: 0 }
 var r=7;  //Radius
-var Population=, parseInt(sliderPopulationFixed.value), parseInt(sliderInfected.value), parseInt(sliderVelocity.value), parseInt(sliderHospital.value), parseInt(sliderRecoveryTime.value), parseInt(sliderHospitalTime.value)
+//var Population=, parseInt(sliderPopulationFixed.value), parseInt(sliderInfected.value), parseInt(sliderVelocity.value), parseInt(sliderHospital.value), parseInt(sliderRecoveryTime.value), //parseInt(sliderHospitalTime.value)
 
 
 var stateProxy = new Proxy(stateCount, {
     set: function(target, key, value) {
         target[key] = value;
-/*
+
         var outputStatUninfected = document.getElementById("statUninfected");
         outputStatUninfected.innerHTML = stateCount.uninfected + " (" + Math.round(100 * parseFloat(stateProxy.uninfected) / parseFloat(stateProxy.root_population)) + "%)"
 
@@ -50,7 +50,7 @@ var stateProxy = new Proxy(stateCount, {
 
         var outputStatFreeBeds = document.getElementById("statDiedBecauseOfNoBed");
         outputStatFreeBeds.innerHTML = stateCount.diedBecauseOfNoBed
-*/
+
         return true;
     }
 });
@@ -696,6 +696,100 @@ function runSim() {
         window.clearInterval(interval);
     }
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var touchesInAction = {};
+var isDrawStart, startPosition, lineCoordinates;
+
+function arrow(ctx_internal,p1,p2,size){
+	ctx_internal.save();
+ctx_internal.fillStyle = ctx_internal.strokeStyle = '#099';
+	ctx_internal.beginPath();
+        	
+console.log(p1.x,p1.y,p2.x,p2.y);
+
+     ctx_internal.arc(startPosition.x,startPosition.y, r, 0, 2 * Math.PI);
+     ctx_internal.fill();
+     var dx = p2.x-p1.x, dy=p2.y-p1.y, len=Math.sqrt(dx*dx+dy*dy);
+console.log("length",len);
+      ctx_internal.translate(p2.x,p2.y);
+      ctx_internal.rotate(Math.atan2(dy,dx));
+      ctx_internal.lineCap = 'round';
+      ctx_internal.beginPath();
+      ctx_internal.moveTo(0,0);
+      ctx_internal.lineTo(-len,0);
+      ctx_internal.closePath();
+      ctx_internal.stroke();
+      ctx_internal.beginPath();
+      ctx_internal.moveTo(0,0);
+      ctx_internal.lineTo(-size,-size);
+      ctx_internal.lineTo(-size, size);
+      ctx_internal.closePath();
+      ctx_internal.fill();
+      ctx_internal.restore();
+ 	
+}
+
+const getClientOffset = (event) => {
+    const {pageX, pageY} = event.touches ? event.touches[0] : event;
+    const x = pageX - canvas.offsetLeft;
+    const y = pageY - canvas.offsetTop;
+
+    return {
+       x,
+       y
+    } 
+}
+
+function clearCanvas(ctx_internal) {
+   ctx_internal.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function process_touchstart(event)
+{
+event.preventDefault();
+var touches = getClientOffset(event);  //event.touches;changedTouches;
+if(touches!=undefined)
+{
+startPosition=touches;
+console.log('sg',startPosition.x,startPosition.y);
+ctx.fillStyle = ctx.strokeStyle = '#099';
+ctx.beginPath();
+ctx.arc(startPosition.x,startPosition.y, r, 0, 2 * Math.PI);
+ctx.fill();
+isDrawStart=true;
+}
+}
+
+function process_touchmove(event){
+event.preventDefault();
+var touches = getClientOffset(event);  //event.changedTouches;
+ if(!isDrawStart) return;
+  lineCoordinates=touches;
+ 
+if(lineCoordinates!=undefined && startPosition!=undefined)
+{
+console.log('nopeee');
+  //ctx.save();
+
+
+clearCanvas(ctx);
+//ctx.restore();
+//drawLineWithArrowhead(startPosition,lineCoordinates,10);
+//ctx.restore();
+//drawArrow(ctx,Arrow,startPosition,lineCoordinates);
+  arrow(ctx,startPosition,lineCoordinates,10);
+}
+}
+
+function process_touchend(event) {
+event.preventDefault();
+var touches = getClientOffset(event);  //event.changedTouches;
+if(touches!=undefined)
+{console.log('jb');
+//ctx.restore();
+  isDrawStart=false;
+}	
+}
 
 var mouseX,mouseY,mouseDown=0,touchX,touchY;
 /*
@@ -765,11 +859,22 @@ function getTouchPos(e) {
 
 function init() {
 	if (ctx) {
+
+canvas.addEventListener('mousedown', process_touchstart,false);
+canvas.addEventListener('mousemove', process_touchmove,false);
+//canvas.addEventListener('touchcancel', process_touchcancel, false);
+canvas.addEventListener('mouseup', process_touchend,false);
+
+canvas.addEventListener('touchstart', process_touchstart,false);
+canvas.addEventListener('touchmove', process_touchmove,false);
+//canvas.addEventListener('touchcancel', process_touchcancel, false);
+canvas.addEventListener('touchend', process_touchend,false);
+
 	//    canvas.addEventListener('mousedown', sketchpad_mouseDown, false);
           //  canvas.addEventListener('mousemove', sketchpad_mouseMove, false);
            // window.addEventListener('mouseup', sketchpad_mouseUp, false);
-            canvas.addEventListener('touchstart', sketchpad_touchStart, false);
-            canvas.addEventListener('touchmove', sketchpad_touchMove, false);
+            //canvas.addEventListener('touchstart', sketchpad_touchStart, false);
+            //canvas.addEventListener('touchmove', sketchpad_touchMove, false);
         	}
 }
 

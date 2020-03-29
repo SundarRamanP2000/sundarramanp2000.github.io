@@ -51,10 +51,24 @@ hr {
     min-width: 50%;
 }
 
-#canvas {
-    display: block;
-    margin: auto;
+#canvas_1 {
+/*    margin: auto;*/
     border: 2px solid #ccc;
+    position: fixed; /* absolute */
+    top: 0;
+    left: 0;
+    width: 50vw;    /* 100% */
+    height: 100vh;   /* 100% */
+}
+
+#canvas_2 {
+/*    margin: auto;*/
+    border: 2px solid #ccc;
+    position: fixed; /* absolute */
+    top: 0;
+    left: 0;
+    width: 50vw;    /* 100% */
+    height: 100vh;   /* 100% */
 }
 
 .chart_container {
