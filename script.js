@@ -775,9 +775,8 @@ function process_touchmove(event){
 }
 
 function process_touchend(event) {
-	event.preventDefault();
-	var touches = getClientOffset(event, canvas_1);  //event.changedTouches;
-	if(touches!=undefined)
+	event.preventDefault();  //	var touches = getClientOffset(event, canvas_1);//event.changedTouches;
+	if(event)
 	{
 		console.log("hippy:",velocit.x,velocit.y);
 		var newBall = new Ball(
@@ -828,3 +827,4 @@ $('#new').on('click', function() {
     activateInterval();
     sim.redraw();
 });
+//4
