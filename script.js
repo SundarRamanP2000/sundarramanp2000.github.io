@@ -1,13 +1,13 @@
-var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup!
-var CANVAS_HEIGHT = $('body').height();
+var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup!---//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
+var CANVAS_HEIGHT = $('body').height();  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
 var canvas_1 = document.getElementById('canvas_1');
 var ctx_1 = canvas_1.getContext('2d');
 var canvas_2 = document.getElementById('canvas_2');
 var ctx_2 = canvas_2.getContext('2d');
-canvas_1.width = CANVAS_WIDTH;
-canvas_1.height = CANVAS_HEIGHT;  
-canvas_2.width = CANVAS_WIDTH;
-canvas_2.height = CANVAS_HEIGHT;  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
+canvas_1.width = window.innerWidth;  //CANVAS_WIDTH;
+canvas_1.height = window.innerHeight;  //CANVAS_HEIGHT;  
+canvas_2.width = window.innerWidth;  //CANVAS_WIDTH;
+canvas_2.height = window.innerHeight;  //CANVAS_HEIGHT;  
 
 var gcounter = 0;  //Global variables setup!
 var cl = CANVAS_WIDTH;
@@ -26,13 +26,13 @@ var max_velocit=5000; //Maxium velocity of newly created balls^|^
 var elasticity=0.9;  //Co-efficient of restitution of collision!
 ///BEGIN:   Toy parameters for good UX!
 var population=30;  //Total population 
-var fixedpopulation=4;  //Initial fixed population (part of 'population')
+var fixedpopulation=0;  //Initial fixed population (part of 'population')
 var lockedpopulation=0;
 var infected=5;
 var immunized=0;
 var dead=0;
 var hospital_radius_factor=5;
-var healtimer=150;
+var healtimer=5000;
 var cointimer=50;
 var housetimer=200;
 var slowVal = 2;  //Slow the bounced off infected ball
@@ -113,7 +113,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
     this.vold = { x: velX, y: velY };
     this.r = r;
     this.partner = null;
-    var s = 0  //#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
+    var s = 0;  //#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
     var previous_s = 0;  //By default: uninfected (used for lockdown case)
     var previous_v = {x: velX, y: velY}; 
     var m = Math.PI * r * r;
@@ -233,7 +233,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
     };
 
     this.timeToHit = function(ball){  //Collision prediction
-        if (this.s == 3 || this.s == 4 || ball.s == 3 || ball.s == 4) { return Number.POSITIVE_INFINITY; }
+        if (this.s == 5 || this.s == 4 || ball.s == 5 || ball.s == 4) { return Number.POSITIVE_INFINITY; }
         if (this.equals(ball)) { return Number.POSITIVE_INFINITY; }
         var dpx = ball.p.x - this.p.x;
         var dpy = ball.p.y - this.p.y;
@@ -268,7 +268,8 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
         return ((this.r - this.p.y) / this.v.y);
     };
     this.bounceOff = function(ball) {      //Collision resolution simplified (physically not correct!)
-        if (this.v.x != 0 || this.v.y != 0) {
+        //if (this.v.x != 0 || this.v.y != 0)
+         {
             var min = 0;
             var max = this.vabs;
             var vx = Math.random() * (+max - +min) + +min;
@@ -281,10 +282,10 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
             {
               this.v.x = posNeg() * Math.floor(vx);
               this.v.y = posNeg() * Math.floor(vy);
-            }  //sim.predictAll(this)
+            }  //sim.predictAll(this);  //this.v.x = (this.v.x*(1-elasticity)+(1+elasticity)*ball.v.x)/2;--didn't work!
         }
-
-        if (ball.v.x != 0 || ball.v.y != 0) {
+        //if (ball.v.x != 0 || ball.v.y != 0) 
+        {
             var min = 0;
             var max = ball.vabs;
             var vx = Math.random() * (+max - +min) + +min;
@@ -301,7 +302,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
         }
         if (ball.s == 1){
         	if(this.s == 0){
-        		this.s = 1;
+        		this.s = 1;	
             	stateProxy.infected+=1;
             	stateProxy.uninfected-=1;
 	            this.partner = ball;
@@ -337,6 +338,8 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
        			sim.predictAll(ball);
        		}
        	}
+       	if(this.r==6 || ball.r==6)
+       		console.log('raji1');
     };
     this.bounceOffVerticalWall = function() {
         this.v.x = -this.v.x;
@@ -407,12 +410,16 @@ function Sim(balls) {  //Sim constructor
     this.predictAll = function(ball) {
         if (ball == null) { return; }
         var dt;
-        if(ball.r==10)
+        if(ball.r==6)
         	console.log("doing!!");
 
         for (var i = 0; i < balls.length; i++) {
             dt = ball.timeToHit(balls[i]);
+                   	if(this.r==6)
+       		console.log(dt);
             if (!isFinite(dt) || dt <= 0) { continue; }
+                   	if(this.r==6)
+       		console.log('raji2');
             this.pq.insert(new SimEvent(this.time + dt, ball, balls[i]));
         }
         dt = ball.timeToHitVerticalWall();
@@ -765,7 +772,7 @@ function process_touchend(event) {
 	                startPosition.y,
 	                velocit.x,
 	                velocit.y,
-	                6,
+	                r,
 	           		healtimer,
 					cointimer,
 					housetimer
