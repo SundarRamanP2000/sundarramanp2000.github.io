@@ -1,3 +1,16 @@
+var elem = document.documentElement;
+function openFullscreen(){
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+    screen.orientation.lock("landscape-secondary");
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+}
 var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup!---//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
 var CANVAS_HEIGHT = $('body').height();  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
 var canvas_1 = document.getElementById('canvas_1');
