@@ -17,10 +17,10 @@ var canvas_1 = document.getElementById('canvas_1');
 var ctx_1 = canvas_1.getContext('2d');
 var canvas_2 = document.getElementById('canvas_2');
 var ctx_2 = canvas_2.getContext('2d');
-canvas_1.width = window.innerWidth;  //CANVAS_WIDTH;
-canvas_1.height = window.innerHeight;  //CANVAS_HEIGHT;  
-canvas_2.width = window.innerWidth;  //CANVAS_WIDTH;
-canvas_2.height = window.innerHeight;  //CANVAS_HEIGHT;  
+canvas_1.width = CANVAS_WIDTH;  //window.innerWidth();  //CANVAS_WIDTH;
+canvas_1.height = CANVAS_HEIGHT;  //CANVAS_HEIGHT;  //window.innerHeight();  
+canvas_2.width = CANVAS_WIDTH;  //window.innerWidth;  //CANVAS_WIDTH;
+canvas_2.height = CANVAS_HEIGHT;  //window.innerHeight;  //CANVAS_HEIGHT;  
 
 var gcounter = 0;  //Global variables setup!
 var cl = CANVAS_WIDTH;
