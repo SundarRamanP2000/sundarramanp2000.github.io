@@ -748,7 +748,7 @@ function process_touchstart(event)
 	    ctx_1.beginPath();
  		ctx_1.arc(startPosition.x,startPosition.y,r,0,Math.PI, false);
       	ctx_1.closePath();
-      	ctx_1.lineWidth = 1;
+      	ctx_1.lineWidth = 0.5;
       	ctx_1.fillStyle = "#00CED1";  //Dark Turquoise bottom semicircle--immunized
       	ctx_1.fill();
       	ctx_1.strokeStyle = "#00CED1";
@@ -770,6 +770,8 @@ function process_touchmove(event){
 	if(lineCoordinates!=undefined && startPosition!=undefined)
 	{
 		clearCanvas(ctx_2, canvas_2);
+		lineCoordinates.x=2*startPosition.x-lineCoordinates.x;
+		lineCoordinates.y=2*startPosition.y-lineCoordinates.y;
 		arrow(ctx_2,startPosition,lineCoordinates,10);
 	}
 }
@@ -793,7 +795,9 @@ function process_touchend(event) {
 		newBall.s=3;
 	if(validateNewBall(newBall, newBall)){
 		balls.unshift(newBall);  //push()
-		console.log('shw');
+		console.log('shw');screen.orientation.addEventListener("change", function(e) {
+  alert(screen.orientation.type + " " + screen.orientation.angle);
+}, false);
 	}	clearCanvas(ctx_2, canvas_2);	
 		isDrawStart=false;
 	}	
