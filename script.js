@@ -11,16 +11,16 @@ function openFullscreen(){
     elem.msRequestFullscreen();
   }
 }
-var CANVAS_WIDTH = $('.canvas_container').width();  //Canva setup!---//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
-var CANVAS_HEIGHT = $('body').height();  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
+var CANVAS_WIDTH = elem.offsetWidth;//$('.canvas_container').width();  //Canva setup!---//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
+var CANVAS_HEIGHT = elem.offsetHeight;//$('body').height();  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
 var canvas_1 = document.getElementById('canvas_1');
 var ctx_1 = canvas_1.getContext('2d');
 var canvas_2 = document.getElementById('canvas_2');
 var ctx_2 = canvas_2.getContext('2d');
-canvas_1.width = CANVAS_WIDTH;  //window.innerWidth();  //CANVAS_WIDTH;
-canvas_1.height = CANVAS_HEIGHT;  //CANVAS_HEIGHT;  //window.innerHeight();  
-canvas_2.width = CANVAS_WIDTH;  //window.innerWidth;  //CANVAS_WIDTH;
-canvas_2.height = CANVAS_HEIGHT;  //window.innerHeight;  //CANVAS_HEIGHT;  
+canvas_1.width = elem.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth();  //CANVAS_WIDTH;
+canvas_1.height = elem.offsetHeight;//CANVAS_HEIGHT;  //CANVAS_HEIGHT;  //window.innerHeight();  
+canvas_2.width = elem.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth;  //CANVAS_WIDTH;
+canvas_2.height = elem.offsetHeight;//CANVAS_HEIGHT;  //window.innerHeight;  //CANVAS_HEIGHT;  
 
 var gcounter = 0;  //Global variables setup!
 var cl = CANVAS_WIDTH;
