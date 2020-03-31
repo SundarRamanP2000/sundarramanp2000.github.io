@@ -2,7 +2,7 @@ var elem = document.documentElement;
 function openFullscreen(){
   if (elem.requestFullscreen) {
     elem.requestFullscreen();
-    screen.orientation.lock("landscape-secondary");
+//    screen.orientation.lock("landscape-secondary");
   } else if (elem.mozRequestFullScreen) { /* Firefox */
     elem.mozRequestFullScreen();
   } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
