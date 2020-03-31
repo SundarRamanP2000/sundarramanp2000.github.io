@@ -26,7 +26,7 @@ var gcounter = 0;  //Global variables setup!
 var cl = CANVAS_WIDTH;
 var interval, intervalActive;
 var stateCount = { population: 0, fixedpopulation: 0, lockedpopulation: 0, infected: 0, immunized: 0, uninfected: 0, dead:0 };
-var r=7;  //Radius
+var r=5;  //Radius
 var touchesInAction = {};  //For mouse/touch event identification
 var isDrawStart, startPosition, lineCoordinates;
 var ms = 30;  //Other parameters and objects
