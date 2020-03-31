@@ -1,6 +1,7 @@
 var elem = document.documentElement;
 var elem_1 = document.getElementById("canvas_1");//document.documentElement;
 var elem_2 = document.getElementById("canvas_2");
+
 function openFullscreen(){
   if (elem_1.requestFullscreen && elem_2.requestFullscreen) {
     elem_1.requestFullscreen(); elem_2.requestFullscreen();
@@ -28,7 +29,7 @@ var gcounter = 0;  //Global variables setup!
 var cl = CANVAS_WIDTH;
 var interval, intervalActive;
 var stateCount = { population: 0, fixedpopulation: 0, lockedpopulation: 0, infected: 0, immunized: 0, uninfected: 0, dead:0 };
-var r=10;  //Radius
+var r=6;  //Radius
 var touchesInAction = {};  //For mouse/touch event identification
 var isDrawStart, startPosition, lineCoordinates;
 var ms = 30;  //Other parameters and objects
@@ -51,7 +52,7 @@ var healtimer=5000;
 var cointimer=50;
 var housetimer=200;
 var slowVal = 2;  //Slow the bounced off infected ball
-var speed=247;
+var speed=290;  //247
 ///END:   Toy parameters for good UX!
 var stateProxy = new Proxy(stateCount, {
     set: function(target, key, value) {
@@ -217,7 +218,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
                 ctx_1.fillStyle = "#8c8c8c";  //Grey--uninfected
                 break;
             case 1:
-                ctx_1.fillStyle = "#ff4444";  //Red--infected
+                ctx_1.fillStyle = "#8D0000";  //"#ff4444";  //Red--infected
                 break;
             case 2:
                 ctx_1.fillStyle = "#ff00ff";  //Magenta--lockeddown                     --change to icon
