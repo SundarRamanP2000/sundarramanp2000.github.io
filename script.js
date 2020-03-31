@@ -1,3 +1,12 @@
+	console.log("1",document.getElementById("canvas_1").offsetHeight);
+
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
 function openFullscreen(){
 var elem = document.documentElement;
 
@@ -9,21 +18,22 @@ var elem = document.documentElement;
     elem.webkitRequestFullscreen();
   } else if (elem.msRequestFullscreen) { /* IE/Edge */
     elem.msRequestFullscreen();
-  }
+  
+}
+//sleep(5000);
+
 var button = document.getElementById('ofs');
-button.style.display = 'none'
-var elem_1 = document.getElementById("canvas_1");//document.documentElement;
-var elem_2 = document.getElementById("canvas_2");
-var CANVAS_WIDTH = elem.offsetWidth;//$('.canvas_container').width();  //Canva setup!---//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
-var CANVAS_HEIGHT = elem.offsetHeight;//$('body').height();  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
+button.style.display = 'none';
+//var elem_1 = document.getElementById("canvas_1");//document.documentElement;
+//var elem_2 = document.getElementById("canvas_2");
+//$('.canvas_container').width();  //Canva setup!---//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
+//$('body').height();  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
+console.log('2',CANVAS_HEIGHT); 	
 var canvas_1 = document.getElementById('canvas_1');
 var ctx_1 = canvas_1.getContext('2d');
 var canvas_2 = document.getElementById('canvas_2');
 var ctx_2 = canvas_2.getContext('2d');
-canvas_1.width = elem.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth();  //CANVAS_WIDTH;
-canvas_1.height = elem.offsetHeight;//CANVAS_HEIGHT;  //CANVAS_HEIGHT;  //window.innerHeight();  
-canvas_2.width = elem.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth;  //CANVAS_WIDTH;
-canvas_2.height = elem.offsetHeight;//CANVAS_HEIGHT;  //window.innerHeight;  //CANVAS_HEIGHT;  
+var CANVAS_WIDTH, CANVAS_HEIGHT;
 
 var gcounter = 0;  //Global variables setup!
 var cl = CANVAS_WIDTH;
@@ -482,6 +492,8 @@ function Sim(balls) {  //Sim constructor
         for (var i = 0; i < balls.length; i++) {
          if(balls[i].r==10)
          	console.log('hipp1');
+         	console.log("1",document.getElementById("canvas_1").offsetHeight);
+
          balls[i].draw();
         }
         gcounter += 1;
@@ -825,10 +837,16 @@ canvas_2.addEventListener('touchmove', process_touchmove,false);
 //canvas_2.addEventListener('touchcancel', process_touchcancel, false);
 canvas_2.addEventListener('touchend', process_touchend,false);
 
-makeSim(population,fixedpopulation,lockedpopulation,infected,immunized,dead);
-sim.redraw();
+//sim.redraw();
 $('#stop').on('click', deactivateInterval);
 $('#new').on('click', function() {
+//	makeSim(population,fixedpopulation,lockedpopulation,infected,immunized,dead);
+	CANVAS_WIDTH = canvas_1.offsetWidth;
+	CANVAS_HEIGHT = canvas_1.offsetHeight;
+	canvas_1.width = canvas_1.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth();  //CANVAS_WIDTH;
+	canvas_1.height = canvas_1.offsetHeight;//CANVAS_HEIGHT;  //CANVAS_HEIGHT;  //window.innerHeight();  
+	canvas_2.width = canvas_1.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth;  //CANVAS_WIDTH;
+	canvas_2.height = canvas_1.offsetHeight;//CANVAS_HEIGHT;  //window.innerHeight;  //CANVAS_HEIGHT;  
     deactivateInterval();
     makeSim(population,fixedpopulation,lockedpopulation,infected,immunized,dead);
     activateInterval();
