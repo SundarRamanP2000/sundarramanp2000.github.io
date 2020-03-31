@@ -1,19 +1,19 @@
+function openFullscreen(){
 var elem = document.documentElement;
+
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen(); screen.orientation.lock("landscape-secondary");
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+var button = document.getElementById('ofs');
+button.style.display = 'none'
 var elem_1 = document.getElementById("canvas_1");//document.documentElement;
 var elem_2 = document.getElementById("canvas_2");
-
-function openFullscreen(){
-  if (elem_1.requestFullscreen && elem_2.requestFullscreen) {
-    elem_1.requestFullscreen(); elem_2.requestFullscreen();
-//    screen.orientation.lock("landscape-secondary");
-  } else if (elem_1.mozRequestFullScreen) { /* Firefox */
-    elem_1.mozRequestFullScreen();
-  } else if (elem_1.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-    elem_1.webkitRequestFullscreen();
-  } else if (elem_1.msRequestFullscreen) { /* IE/Edge */
-    elem_1.msRequestFullscreen();
-  }
-}
 var CANVAS_WIDTH = elem.offsetWidth;//$('.canvas_container').width();  //Canva setup!---//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
 var CANVAS_HEIGHT = elem.offsetHeight;//$('body').height();  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
 var canvas_1 = document.getElementById('canvas_1');
@@ -29,7 +29,7 @@ var gcounter = 0;  //Global variables setup!
 var cl = CANVAS_WIDTH;
 var interval, intervalActive;
 var stateCount = { population: 0, fixedpopulation: 0, lockedpopulation: 0, infected: 0, immunized: 0, uninfected: 0, dead:0 };
-var r=6;  //Radius
+var r=10;  //Radius
 var touchesInAction = {};  //For mouse/touch event identification
 var isDrawStart, startPosition, lineCoordinates;
 var ms = 30;  //Other parameters and objects
@@ -834,4 +834,5 @@ $('#new').on('click', function() {
     activateInterval();
     sim.redraw();
 });
+}
 //4
