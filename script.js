@@ -1,14 +1,16 @@
 var elem = document.documentElement;
+var elem_1 = document.getElementById("canvas_1");//document.documentElement;
+var elem_2 = document.getElementById("canvas_2");
 function openFullscreen(){
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
+  if (elem_1.requestFullscreen && elem_2.requestFullscreen) {
+    elem_1.requestFullscreen(); elem_2.requestFullscreen();
 //    screen.orientation.lock("landscape-secondary");
-  } else if (elem.mozRequestFullScreen) { /* Firefox */
-    elem.mozRequestFullScreen();
-  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) { /* IE/Edge */
-    elem.msRequestFullscreen();
+  } else if (elem_1.mozRequestFullScreen) { /* Firefox */
+    elem_1.mozRequestFullScreen();
+  } else if (elem_1.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+    elem_1.webkitRequestFullscreen();
+  } else if (elem_1.msRequestFullscreen) { /* IE/Edge */
+    elem_1.msRequestFullscreen();
   }
 }
 var CANVAS_WIDTH = elem.offsetWidth;//$('.canvas_container').width();  //Canva setup!---//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
@@ -26,7 +28,7 @@ var gcounter = 0;  //Global variables setup!
 var cl = CANVAS_WIDTH;
 var interval, intervalActive;
 var stateCount = { population: 0, fixedpopulation: 0, lockedpopulation: 0, infected: 0, immunized: 0, uninfected: 0, dead:0 };
-var r=5;  //Radius
+var r=10;  //Radius
 var touchesInAction = {};  //For mouse/touch event identification
 var isDrawStart, startPosition, lineCoordinates;
 var ms = 30;  //Other parameters and objects
@@ -327,9 +329,9 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
         		this.s = 0;
             	stateProxy.infected+=1;
             	stateProxy.uninfected-=1;
-	            this.partner = ball;
-    	        this.v.x = this.v.x/slowVal;
-        	    this.v.y = this.v.y/slowVal;
+	            this.partner = null;
+//    	        this.v.x = this.v.x/slowVal;
+  //      	    this.v.y = this.v.y/slowVal;
             	sim.predictAll(this);
         		}
         	}
@@ -338,7 +340,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
         		ball.s = 1;
         		stateProxy.infected+=1;
             	stateProxy.uninfected-=1;
-            	ball.partner = this;
+            	ball.partner = null;
             	ball.v.x = this.v.x/slowVal;
             	ball.v.y = this.v.y/slowVal;
             	sim.predictAll(ball);
@@ -346,8 +348,8 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer) {  //
        		if(ball.s==3){
        			ball.s = 0;
        			stateProxy.uninfected+=1;
-	           	ball.v.x = this.v.x/slowVal;
-            	ball.v.y = this.v.y/slowVal;
+	//           	ball.v.x = this.v.x/slowVal;
+      //      	ball.v.y = this.v.y/slowVal;
        			sim.predictAll(ball);
        		}
        	}
