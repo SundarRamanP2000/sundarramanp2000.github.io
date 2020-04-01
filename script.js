@@ -205,9 +205,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
     	}
     	if(this.s==5) {
     		this.hospitaltimer-=1;
-    		if(this.hospitaltimer==0)
-    			balls.splice(balls.indexOf(this),1);
-    	}
+     	}
 
     	sim.predictAll(this);
 
@@ -223,24 +221,27 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
         ctx_1.beginPath();
         if (this.s == 5) {
         	if(this.hospitaltimer<10) { 
-        	if(this.hospitaltimer%3==0) {
+         		if(this.hospitaltimer%4==0) {
         	var temp_r = parseFloat(this.r)/parseFloat(hospital_radius_factor);
-            ctx_2.rect(this.p.x, this.p.y - temp_r, temp_r, temp_r * 3);
-            ctx_2.rect(this.p.x - temp_r, this.p.y, temp_r * 3, temp_r);
-            ctx_2.fillStyle = 'rgba(0,255,0,1)';  //"#00c851"  //Green
-            ctx_2.fill();
+            ctx_1.rect(this.p.x, this.p.y - temp_r, temp_r, temp_r * 3);
+            ctx_1.rect(this.p.x - temp_r, this.p.y, temp_r * 3, temp_r);
+            ctx_1.fillStyle = "#013220";  //'rgba(0,255,0,1)';  //"#00c851"  //Green
+            ctx_1.fill();
         	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
         	ctx_1.fillStyle = 'rgba(124,252,0,0.4)';
+	   		if(this.hospitaltimer==0)
+    			balls.splice(balls.indexOf(this),1);
         		}
+
         	}
         	else {
         	var temp_r = parseFloat(this.r)/parseFloat(hospital_radius_factor);
-            ctx_2.rect(this.p.x, this.p.y - temp_r, temp_r, temp_r * 3);
-            ctx_2.rect(this.p.x - temp_r, this.p.y, temp_r * 3, temp_r);
-            ctx_2.fillStyle = 'rgba(0,255,0,1)';  //"#00c851"  //Green
-            ctx_2.fill();
+            ctx_1.rect(this.p.x-parseFloat(temp_r)/parseFloat(2), this.p.y - parseFloat(3*temp_r)/parseFloat(2), temp_r, temp_r * 3);
+            ctx_1.rect(this.p.x - parseFloat(3*temp_r)/parseFloat(2), this.p.y-parseFloat(temp_r)/parseFloat(2), temp_r * 3, temp_r);
+            ctx_1.fillStyle = "#013220";  //'rgba(0,255,0,1)';  //"#00c851"  //Green
+            ctx_1.fill();
         	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
-        	ctx_1.fillStyle = 'rgba(124,252,0,0.4)';
+        	ctx_1.fillStyle = 'rgba(124,252,0,0.2)';
         	}
         }
         else if(this.s==3){
@@ -323,7 +324,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
         return ((this.r - this.p.y) / this.v.y);
     };
     this.bounceOff = function(ball) {      //Collision resolution simplified (physically not correct!)
-        if(this.s!=5)  //if (this.v.x != 0 || this.v.y != 0)
+        if(this.s!=5 && ball.s!=5)  //if (this.v.x != 0 || this.v.y != 0)
          {
             var min = 0;
             var max = this.vabs;
@@ -339,7 +340,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
               this.v.y = posNeg() * Math.floor(vy);
             }  //sim.predictAll(this);  //this.v.x = (this.v.x*(1-elasticity)+(1+elasticity)*ball.v.x)/2;--didn't work!
         }
-		if(ball.s!=5)  //if (ball.v.x != 0 || ball.v.y != 0) 
+		if(ball.s!=5 && this.s!=5)  //if (ball.v.x != 0 || ball.v.y != 0) 
         {
             var min = 0;
             var max = ball.vabs;
@@ -399,33 +400,42 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
        	}
     	if(this.s==5)  {
         	if(ball.inside_hospital==0)  {
+        		console.log("sel1");
         		ball.inside_hospital=1;
         		ball.v.x=ball.v.x/slowVal_hospi;
         		ball.v.y=ball.v.y/slowVal_hospi;
         		ball.partner=null;
     	   		}
         	if(ball.inside_hospital==1)  {
+        		console.log("sel2");
+
         		ball.inside_hospital=0;
         		ball.v.x=ball.v.x*slowVal_hospi;
         		ball.v.y=ball.v.y*slowVal_hospi;
         		if(ball.s==1)
         			ball.s=0;
 	       		}
+	       		sim.predictAll(ball);
         }
     	if(ball.s==5)  {
         	if(this.inside_hospital==0)  {
+        		console.log("sel3");
+
         		this.inside_hospital=1;
         		this.v.x=this.v.x/slowVal_hospi;
         		this.v.y=this.v.y/slowVal_hospi;
         		this.partner=null;
     	   		}
         	if(this.inside_hospital==1)  {
+        		console.log("sel4");
+
         		this.inside_hospital=0;
         		this.v.x=this.v.x*slowVal_hospi;
         		this.v.y=this.v.y*slowVal_hospi;
         		if(this.s==1)
         			this.s=0;
 	       		}
+	       		sim.predictAll(this);
         }      
     };
     this.bounceOffVerticalWall = function() {
