@@ -29,11 +29,11 @@ var elem = document.documentElement;
   if (elem.requestFullscreen) {
     elem.requestFullscreen(); screen.orientation.lock("landscape-secondary");
   } else if (elem.mozRequestFullScreen) { /* Firefox */
-    elem.mozRequestFullScreen();
+    elem.mozRequestFullScreen(); screen.orientation.lock("landscape-secondary");
   } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-    elem.webkitRequestFullscreen();
+    elem.webkitRequestFullscreen(); screen.orientation.lock("landscape-secondary");
   } else if (elem.msRequestFullscreen) { /* IE/Edge */
-    elem.msRequestFullscreen();
+    elem.msRequestFullscreen(); screen.orientation.lock("landscape-secondary");
   
 }
 //sleep(5000);
@@ -400,14 +400,12 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
        	}
     	if(this.s==5)  {
         	if(ball.inside_hospital==0)  {
-        		console.log("sel1");
         		ball.inside_hospital=1;
         		ball.v.x=ball.v.x/slowVal_hospi;
         		ball.v.y=ball.v.y/slowVal_hospi;
         		ball.partner=null;
     	   		}
         	if(ball.inside_hospital==1)  {
-        		console.log("sel2");
 
         		ball.inside_hospital=0;
         		ball.v.x=ball.v.x*slowVal_hospi;
@@ -419,16 +417,12 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
         }
     	if(ball.s==5)  {
         	if(this.inside_hospital==0)  {
-        		console.log("sel3");
-
         		this.inside_hospital=1;
         		this.v.x=this.v.x/slowVal_hospi;
         		this.v.y=this.v.y/slowVal_hospi;
         		this.partner=null;
     	   		}
         	if(this.inside_hospital==1)  {
-        		console.log("sel4");
-
         		this.inside_hospital=0;
         		this.v.x=this.v.x*slowVal_hospi;
         		this.v.y=this.v.y*slowVal_hospi;
@@ -474,8 +468,6 @@ function SimEvent(time, a, b) {  //SimEvent constructor -- If FIRST is null => v
             //    console.log(log);
             return this.time.toFixed(4) === (simTime + a.timeToHitHorizontalWall()).toFixed(4);
         } else { //particle-particle
-        	if(a.r==6 || b.r==6)
-        		console.log("mummm");
             log += 'Validating two-particle.\n';
             log += 'Event time: ' + this.time.toFixed(4) + ', Fresh time: ' + (simTime + a.timeToHit(b)).toFixed(4) + '\n';
             //    console.log(log);
