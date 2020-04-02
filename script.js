@@ -272,15 +272,25 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
 	   			balls.splice(balls.indexOf(this),1);
         	}
         	}
+        else if (this.s==2)  {
+
+        	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
+        	ctx_1.fillStyle = 'rgba(124,252,0,0.2)';
+
+        }
+
         else {
+        	
 		        ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
 		        ctx_1.fillStyle = "#000000";  //'rgba(0,255,0,1)';  //"#00c851"  //Green
             	ctx_1.fill();
         	}
  		}
-        else 
-            ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
-
+        else{ 
+        //    ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
+        	ctx_1.font = '10px serif'
+        	ctx_1.fillText('😜',this.p.x,this.p.y);
+        }
         switch (this.s) {
             case 0:
                 ctx_1.fillStyle = "#8c8c8c";  //Grey--uninfected
