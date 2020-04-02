@@ -408,7 +408,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
         		ball.s = 1;
         		stateProxy.infected+=1;
             	stateProxy.uninfected-=1;
-            	ball.partner = null;
+            	ball.partner = this;
             	ball.v.x = this.v.x/slowVal;
             	ball.v.y = this.v.y/slowVal;
             	sim.predictAll(ball);
