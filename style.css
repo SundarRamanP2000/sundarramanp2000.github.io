@@ -29,9 +29,9 @@ body {
 
 .btn-circle{
     position: absolute; bottom:10px; left:10px;
-    width:30px;
-    height: 30px;
-    border-radius: 0px;
+    width:50px;
+    height: 50px;
+    border-radius: 25px;
     text-align: center;
     line-height: 1.42857;
 }
