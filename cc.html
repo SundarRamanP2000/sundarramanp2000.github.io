@@ -4,84 +4,28 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  
-
-
-
-
-
-
     <title>COVID Chaos</title>
     <link rel="stylesheet" href="./style.css">
-
     <link rel="stylesheet" href="res/bootstrap/css/bootstrap.min.css">
     <script src="res/bootstrap/js/bootstrap.min.js"></script>
-
     <script src="res/Chart.bundle.min.js"></script>
     <script src="res/jquery.min.js"></script>
     <script src="./script.js" defer="defer"></script>
-
-</head>
+</head> 
 
 <body>  
+<button id="button" style="position: absolute; bottom:20px; left:320px;" onclick="openFullscreen()">Open Full Screen</button>
+   
+    <div id="canvas"><canvas id="canvas_1"></canvas>
+	<canvas id="canvas_2"></canvas>   
 
-    <div>  <!class="canvas_container">
-        <canvas id="canvas_1"></canvas>
-	<canvas id="canvas_2"></canvas>
- <!button style="position: absolute; bottom:20px; left:10px;" onclick="hospitalOn()"></i><!/button>
-                        
          <button type="button" id="b1" class="btn btn-danger btn-circle btn-lg" style="   position: absolute; bottom:10px; left:10px;
  " onclick="hospitalOn()"><i class="fa fa-hospital-o" aria-hidden="true" style=" position: absolute; bottom:2.5px; left:8.5px;  font-size:40px"></i></button>
-         <button type="button" class="btn btn-info btn-circle btn-lg" style="   position: absolute; bottom:10px; right:10px;
+         <button class="btn" id="play_id" style="position: absolute; left: 50%; bottom: 10px;"><i class="fa fa-play" id="play_i"></i></button>
+         <button type="button" class="btn btn-info btn-circle btn-lg" style="position: absolute; bottom:10px; right:10px;
  " onclick="houseOn()"><i class="fa fa-home" aria-hidden="true" style="position: absolute; bottom:2.5px; left:6px;  font-size:40px"></i></button>
-                             
-
- <button style="position: absolute; bottom:20px; left:120px;" id="stop">Stop</button>
- <button style="position: absolute; bottom:20px; left:220px;" id="new">Reboot</button>
- <button style="position: absolute; bottom:20px; left:320px;" id="ofs"; onclick="openFullscreen()">Open Full Screen</button>
- <!button style="position: absolute; bottom:20px; left:420px;"  onclick="houseOn()">house<!/button>
-  
-
-  <!input type="button" class="form-control ml-1 col-sm" id="stop" value="Stop"><!/input>
-                        <!input type="button" class="form-control ml-1 col-sm" id="new" value="Reboot"><!/input>
-
-                        <!input type="button" class="form-control ml-1 col-sm" id="openfully" onclick="openFullscreen()" value="open fullscreen"><!/input>
+  <button style="position: absolute; bottom:20px; left:220px;" id="new">Reboot</button>
    </div>
-
-
-
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th>uninfected</th>
-                    <th>infected</th>
-                    <th>cured</th>
-                    <th>deaths</th>
-                    <th>free beds in hospital</th>
-                    <th>died because the hospital was full</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span id="Uninfected"></span></td>
-                    <td><span id="Infected"></span></td>
-                    <td><span id="Dead"></span></td>
-                    <td><span id="Total"></span></td>
-                </tr>
-            </tbody>
-        </table>
-        <p>&nbsp;</p>
-                        <!div id="button-row" class="row">
-                      
-                    <!/div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
 </body>
 
 </html>

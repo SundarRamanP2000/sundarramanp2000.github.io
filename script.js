@@ -1,54 +1,14 @@
 //#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
-console.log("1",document.getElementById("canvas_1").offsetHeight);
-var hospital_on=0;
+var hospital_on=0;  //Global variables setup!
 var house_on=0;
 var flag=0;  //Used for locating hospital construction site
-
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
-function hospitalOn(){
-	house_on=0;
-	hospital_on=1;
-}
-
-function houseOn(){
-	hospital_on=0;
-	house_on=1;
-}
-
-function openFullscreen(){
-var elem = document.documentElement;
-
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen(); screen.orientation.lock("landscape-secondary");
-  } else if (elem.mozRequestFullScreen) { /* Firefox */
-    elem.mozRequestFullScreen(); screen.orientation.lock("landscape-secondary");
-  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-    elem.webkitRequestFullscreen(); screen.orientation.lock("landscape-secondary");
-  } else if (elem.msRequestFullscreen) { /* IE/Edge */
-    elem.msRequestFullscreen(); screen.orientation.lock("landscape-secondary");
-  
-}
-//sleep(5000);
-
-var button = document.getElementById('ofs');
-button.style.display = 'none';
-//$('.canvas_container').width();  //Canva setup!
-//$('body').height();  //var diff = document.documentElement.clientHeight - CANVAS_HEIGHT;
-console.log('2',CANVAS_HEIGHT); 	
-var canvas_1 = document.getElementById('canvas_1');
-var ctx_1 = canvas_1.getContext('2d');
-var canvas_2 = document.getElementById('canvas_2');
-var ctx_2 = canvas_2.getContext('2d');
+var plause=0;
+var canvas_1;  //Canva setup!
+var ctx_1;
+var canvas_2;
+var ctx_2;
 var CANVAS_WIDTH, CANVAS_HEIGHT;
-
-var gcounter = 0;  //Global variables setup!
+var gcounter = 0;  
 var cl = CANVAS_WIDTH;
 var interval, intervalActive;
 var stateCount = { population: 0, fixedpopulation: 0, lockedpopulation: 0, infected: 0, immunized: 0, uninfected: 0, dead:0 };
@@ -72,7 +32,7 @@ var infected=5;
 var immunized=0;
 var dead=0;
 var hospital_radius_factor=10;
-var healtimer=5000;
+var healtimer=3000;
 var cointimer=50;
 var housetimer=200;
 var hospitaltimer=1000;  //300
@@ -84,21 +44,120 @@ var min_touch=10000;  //Empirical obsv.
 var immunized_initial_speed_x=100;  //Initial speed of immunized in x direction!
 var immunized_initial_speed_y=100;  //Initial speed of immunized in y direction!
 ///END:   Toy parameters for good UX!
+var elem = document.documentElement;
+var first_time=1;
 var stateProxy = new Proxy(stateCount, {
     set: function(target, key, value) {
         target[key] = value;
-        var populatioN = document.getElementById("Total");
+/*        var populatioN = document.getElementById("Total");
         populatioN.innerHTML = stateCount.population;
         var uninfecteD = document.getElementById("Uninfected");
         uninfecteD.innerHTML = stateCount.uninfected;
         var deaD = document.getElementById("Dead");
         deaD.innerHTML = stateCount.dead;
         var infecteD = document.getElementById("Infected");
-        infecteD.innerHTML = stateCount.infected;
+        infecteD.innerHTML = stateCount.infected;*/
         return true;
     }
 });
 
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+function hospitalOn(){
+	house_on=0;
+	hospital_on=1;
+}
+function houseOn(){
+	hospital_on=0;
+	house_on=1;
+}
+$(document).ready(
+$("#pause_id").click(function pause(){
+	console.log('3');
+        var pause_button = document.getElementById("pause_id");
+        if(pause_button!=null){
+        pause_button.id="play_id";
+        pause_button.onclick="play()";
+        ($(document.getElementById("pause_id")).removeClass("fa fa-pause").addClass("fa fa-play"));//="fa fa-pause";  //.class="fa fa-play";  
+}}));
+$(document).ready(
+$("#play_id").click(function play(){ console.log('2',plause);
+        if(plause==0){
+        	if(first_time==1){
+        		first_time=0;
+        		hospital_on=0;
+        		house_on=0;
+			   	hospitals=[];balls=[];
+				canvas_1 = document.getElementById('canvas_1');  //Canva setup!
+				ctx_1 = canvas_1.getContext('2d');
+				canvas_2 = document.getElementById('canvas_2');
+				ctx_2 = canvas_2.getContext('2d');
+				CANVAS_WIDTH = canvas_1.offsetWidth;
+				CANVAS_HEIGHT = canvas_1.offsetHeight;
+				canvas_1.width = canvas_1.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth();  //CANVAS_WIDTH;
+				canvas_1.height = canvas_1.offsetHeight;//CANVAS_HEIGHT;  //CANVAS_HEIGHT;  //window.innerHeight();  
+				canvas_2.width = canvas_1.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth;  //CANVAS_WIDTH;
+				canvas_2.height = canvas_1.offsetHeight;//CANVAS_HEIGHT;  //window.innerHeight;  //CANVAS_HEIGHT;  
+       			//function init() { if (ctx_1 && ctx_2) {  //--Called with '<body onload="init()">'
+				canvas_1.addEventListener('mousedown', process_touchstart,false);
+				canvas_1.addEventListener('mousemove', process_touchmove,false);
+				//canvas_1.addEventListener('touchcancel', process_touchcancel, false);
+				canvas_1.addEventListener('mouseup', process_touchend,false);
+				canvas_1.addEventListener('touchstart', process_touchstart,false);
+				canvas_1.addEventListener('touchmove', process_touchmove,false);
+				//canvas_1.addEventListener('touchcancel', process_touchcancel, false);
+				canvas_1.addEventListener('touchend', process_touchend,false);
+				canvas_2.addEventListener('mousedown', process_touchstart,false);
+				canvas_2.addEventListener('mousemove', process_touchmove,false);
+				//canvas_2.addEventListener('touchcancel', process_touchcancel, false);
+				canvas_2.addEventListener('mouseup', process_touchend,false);
+				canvas_2.addEventListener('touchstart', process_touchstart,false);
+				canvas_2.addEventListener('touchmove', process_touchmove,false);
+				//canvas_2.addEventListener('touchcancel', process_touchcancel, false);
+				canvas_2.addEventListener('touchend', process_touchend,false);
+      			makeSim(population,fixedpopulation,lockedpopulation,infected,immunized,dead);
+    			activateInterval();
+    			sim.redraw();
+       	}
+       		else  {
+	   			activateInterval();
+    			sim.redraw();
+	    		}
+        var play_button = document.getElementById("play_id");
+        play_button.id="pause_id";
+        play_button.onclick="pause()";
+        ($(document.getElementById("play_i")).removeClass("fa-play").addClass("fa-pause"));//="fa fa-pause";  //.class="fa fa-play";  
+        document.getElementById("play_i").id="pause_i";
+        plause=1;
+    	}
+    	else{
+    	plause=0;
+        deactivateInterval();
+        var pause_button = document.getElementById("pause_id");
+        pause_button.id="play_id";
+        pause_button.onclick="play()";
+        ($(document.getElementById("pause_i")).removeClass("fa-pause").addClass("fa-play"));//="fa fa-pause";  //.class="fa fa-play";  
+        document.getElementById("pause_i").id="play_i";
+		}
+        	}
+));
+function openFullscreen(){
+	var button = document.getElementById('button');
+	button.style.display = 'none';
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+    elem.webkitRequestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+}}
 function MinPQ() { //Minimum Priority Queue
     this.heap = [null];
     this.n = 0;
@@ -152,7 +211,6 @@ function MinPQ() { //Minimum Priority Queue
         this.heap[j] = swap;
     };
 }
-
 function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospitaltimer, crem) {  //Ball constructor
     this.p = { x: posX, y: posY };
     this.v = { x: velX, y: velY };
@@ -202,12 +260,12 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
     		this.v.x=0;
     		this.v.y=0;
     		this.partner=null;
-    		this.housetimer-=1;
+/*    		this.housetimer-=1;
     		if(this.housetimer==0){
     			this.s=this.previous_s;
     			this.v.x=this.previous_v.x;
     			this.v.y=this.previous_v.y;
-    		}
+    		}*/
     	}
     	sim.predictAll(this);
         if (this.partner != null) {
@@ -227,9 +285,12 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
             ctx_1.rect(this.p.x, this.p.y - temp_r, temp_r, temp_r * 3);
             ctx_1.rect(this.p.x - temp_r, this.p.y, temp_r * 3, temp_r);
             ctx_1.fillStyle = "#013220";  //'rgba(0,255,0,1)';  //"#00c851"  //Green
-            ctx_1.fill();
+            ctx_1.fill();/*
+        	ctx_1.font = '30px serif';     
+           	ctx_1.fillText('🏥',this.p.x,this.p.y);*/
+	       	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
         	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
-        	ctx_1.fillStyle = 'rgba(124,252,0,0.4)';
+        	ctx_1.fillStyle = 'rgba(124,252,0,0.3)';
 	   		if(this.hospitaltimer==0)  {
 	   			balls.splice(balls.indexOf(this),1);
         		hospitals.splice(balls.indexOf(this),1);
@@ -242,7 +303,9 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
             ctx_1.rect(this.p.x-parseFloat(temp_r)/parseFloat(2), this.p.y - parseFloat(3*temp_r)/parseFloat(2), temp_r, temp_r * 3);
             ctx_1.rect(this.p.x - parseFloat(3*temp_r)/parseFloat(2), this.p.y-parseFloat(temp_r)/parseFloat(2), temp_r * 3, temp_r);
             ctx_1.fillStyle = "#013220";  //'rgba(0,255,0,1)';  //"#00c851"  //Green
-            ctx_1.fill();
+            ctx_1.fill();/*
+           	ctx_1.font = '30px serif';     
+           	ctx_1.fillText('🏥',this.p.x,this.p.y);*/
         	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
         	ctx_1.fillStyle = 'rgba(124,252,0,0.2)';
         	}
@@ -263,22 +326,19 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
 		else if (this.s==4)  {
     		this.crem-=1;
     		console.log('iii',this.crem);
-		    if(this.crem<10) { 
-       		if(this.crem%4==0) {
+		    if(this.crem<20) { 
+       		if(this.crem%2==0) {
 		        ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
 		        ctx_1.fillStyle = "#000000";  //Black  //"#798b47";  //"#ff4444";
             	ctx_1.fill();
         	if(this.crem==0)
 	   			balls.splice(balls.indexOf(this),1);
         	}
+        	else  {
+        	ctx_1.font = '30px serif';
+        	ctx_1.fillText('👻',this.p.x-4,this.p.y-3);  //ballpark!
         	}
-        else if (this.s==2)  {
-
-        	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
-        	ctx_1.fillStyle = 'rgba(124,252,0,0.2)';
-
-        }
-
+        	}
         else {
         	
 		        ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
@@ -286,28 +346,70 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
             	ctx_1.fill();
         	}
  		}
+ 		else if (this.s==2)  {
+ 			var temp_rad=this.r/3;
+        	if(this.previous_s==3){
+		    ctx_1.beginPath();
+ 			ctx_1.arc(this.p.x,this.p.y,temp_rad,0,Math.PI, false);
+      		ctx_1.closePath();
+      		ctx_1.lineWidth = 1;
+      		ctx_1.fillStyle = "#00CED1";  //Dark Turquoise bottom semicircle--immunized
+      		ctx_1.fill();
+      		ctx_1.strokeStyle = "#00CED1";
+      		ctx_1.stroke();
+	    	ctx_1.beginPath();
+ 			ctx_1.arc(this.p.x,this.p.y,temp_rad,Math.PI,2*Math.PI,false);
+      		ctx_1.closePath();
+			ctx_1.fillStyle = "#8c8c8c";  //Grey!
+      		ctx_1.fill();
+        	}
+        	else if(this.previous_s==1){
+            ctx_1.arc(this.p.x, this.p.y,temp_rad, 0, 2 * Math.PI);
+            ctx_1.fillStyle = 'rgba(255,0,0,1)';
+            ctx_1.fill();
+        	}
+        	else if(this.previous_s==0){
+            ctx_1.arc(this.p.x, this.p.y,temp_rad, 0, 2 * Math.PI);
+            ctx_1.fillStyle = '#8c8c8c';
+            ctx_1.fill();     		
+        	}
+        	ctx_1.beginPath();
+        	ctx_1.arc(this.p.x,this.p.y,this.r,0,Math.PI*2);
+        	ctx_1.closePath();
+      		ctx_1.lineWidth = 2;
+     	  	ctx_1.strokeStyle = 'rgba(0,0,128,1)';
+        	ctx_1.stroke();
+/*        	var start_angle=0, end_angle=2*Math.PI, sectors=10, inc_angle=parseFloat(end_angle-start_angle)/parseFloat(sectors)	; 	
+        	for(var i=0;i<sectors;i++){
+        	ctx_1.beginPath();
+        	ctx_1.arc(this.p.x,this.p.y,3*this.r,start_angle,start_angle+inc_angle);
+        	ctx_1.closePath();
+      		ctx_1.lineWidth = 4;
+        	start_angle+=inc_angle;
+        	ctx_1.strokeStyle = 'rgba(0,0,255-10*i,i/10)';
+        	ctx_1.stroke();
+        	}*/
+        }
         else{ 
            ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
         }
         switch (this.s) {
             case 0:
-                ctx_1.fillStyle = "#8c8c8c";  //Grey--uninfected
+                ctx_1.fillStyle = "#8c8c8c";ctx_1.fill();  //Grey--uninfected
                 break;
             case 1:
-                ctx_1.fillStyle = 'rgba(255,0,0,1)';//"#8D0000";  //"#ff4444";  //Red--infected
+                ctx_1.fillStyle = 'rgba(255,0,0,1)';ctx_1.fill();//"#8D0000";  //"#ff4444";  //Red--infected
                 break;
-            case 2:
+/*            case 2:
                 ctx_1.fillStyle = "#ff00ff";  //Magenta--lockeddown                     --change to icon
-                break;
+                break;*/
             case 3:
-                ctx_1.fillStyle =  "#8c8c8c";  //Grey top semicircle--immunized
+                ctx_1.fillStyle =  "#8c8c8c";ctx_1.fill();  //Grey top semicircle--immunized
                 break;
         	case 6:
-        		ctx_1.fillStyle = "#ffd700";  //Yellow
+        		ctx_1.fillStyle = "#ffd700";ctx_1.fill();  //Yellow (gold for coins)
         }
-        ctx_1.fill();
     };
-
     this.equals = function(ball) {  //Equality comparator
         return (
             this.p.x === ball.p.x &&
@@ -317,7 +419,6 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
             this.r === ball.r
         );
     };
-
     this.timeToHit = function(ball){  //Collision prediction
         if (this.s == 4 || ball.s == 4 || this.s==5 || ball.s==5)  { return Number.POSITIVE_INFINITY; }
         if (this.equals(ball)) { return Number.POSITIVE_INFINITY; }
@@ -431,7 +532,6 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
         this.v.y = -this.v.y;
     };
 }
-
 function SimEvent(time, a, b) {  //SimEvent constructor -- If FIRST is null => vertical wall collision!
     this.time = time;
     this.a = a;
@@ -473,7 +573,6 @@ function SimEvent(time, a, b) {  //SimEvent constructor -- If FIRST is null => v
         return 'ball';
     };
 }
-
 function Sim(balls) {  //Sim constructor
     if (balls == null) {
         throw new Error('Sim constructor requires array of balls');
@@ -483,11 +582,9 @@ function Sim(balls) {  //Sim constructor
             throw new Error('Invalid ball passed to Sim constructor');
         }
     }
-
     this.time = 0;
     this.balls = balls;
     this.pq = new MinPQ();
-
     this.predictAll = function(ball) {
         if (ball == null) { return; }
         var dt;
@@ -505,7 +602,6 @@ function Sim(balls) {  //Sim constructor
             this.pq.insert(new SimEvent(this.time + dt, ball, null));
         }
     };
-
     this.predictBalls = function(ball) {
         if (ball == null) { return; }
         var dt;
@@ -530,11 +626,9 @@ function Sim(balls) {  //Sim constructor
             this.pq.insert(new SimEvent(this.time + dt, ball, null));
         }
     };
-
     for (var i = 0; i < balls.length; i++) {
         this.predictAll(balls[i]);
     }
-
     this.redraw = function() {
         ctx_1.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         if(hospitals.length!=0)  {  //undefined
@@ -569,13 +663,11 @@ function Sim(balls) {  //Sim constructor
         }
         gcounter += 1;
     };
-
     this.simulate = function(dt) {  //'Increment' the simulation by time dt
         var simLog = 'Start time: ' + this.time + '\n';
         var end = this.time + dt;
         var minEvent;
         var inc;
-
         var counter = 0;
         while (!this.pq.isEmpty()) {  //Check min event time. If outside time window, break. Otherwise, delete it. If not valid, continue. Otherwise, process the event.
             minEvent = this.pq.viewMin();
@@ -588,14 +680,12 @@ function Sim(balls) {  //Sim constructor
                 simLog += 'Invalid event: ' + minEvent.type() + '\n';
                 continue;
             }
-
             simLog += 'Valid event: ' + minEvent.type() + '; ';
             inc = minEvent.time - this.time;
             for (var i = 0; i < balls.length; i++) {///
                 balls[i].move(inc);
             }
             this.time = minEvent.time;
-
             var a = minEvent.a;
             var b = minEvent.b;
             if (a !== null && b !== null) {
@@ -627,7 +717,6 @@ function Sim(balls) {  //Sim constructor
         this.time = end;  //console.log(simLog);
     };
 }
-
 function validateNewBall(balls, ball) {
     if (ball.p.x - ball.r <= 0 || ball.p.x + ball.r >= CANVAS_WIDTH ||
         ball.p.y - ball.r <= 0 || ball.p.y + ball.r >= CANVAS_HEIGHT) { return false; }
@@ -642,11 +731,9 @@ function validateNewBall(balls, ball) {
     }
     return true;
 }
-
 function posNeg() {
     return Math.pow(-1, Math.floor(Math.random() * 2));
 }
-
 function generateBalls(params) {
     var balls = [];
     var newBall;
@@ -728,7 +815,6 @@ function generateBalls(params) {
     }
     return balls;
 }
-
 function makeSim(population,fixedpopulation,lockedpopulation,infected,immunized,dead)
 { 	stateProxy.population = population;
     stateProxy.fixedpopulation = fixedpopulation;
@@ -750,19 +836,16 @@ function makeSim(population,fixedpopulation,lockedpopulation,infected,immunized,
 
     sim = new Sim(balls);
 }
-
 function activateInterval() {
     if (!intervalActive) {
         interval = window.setInterval(runSim, ms);
         intervalActive = true;
     }
 }
-
 function deactivateInterval() {
     window.clearInterval(interval);
     intervalActive = false;
 }
-
 function runSim() {
     sim.redraw();
     try {
@@ -772,7 +855,6 @@ function runSim() {
         window.clearInterval(interval);
     }
 }
-
 function arrow(ctx_internal,p1,p2,size)
 {
 	ctx_internal.save();
@@ -789,7 +871,7 @@ function arrow(ctx_internal,p1,p2,size)
       	ctx_internal.closePath();
 		ctx_internal.fillStyle = "#8c8c8c";  //Grey!
         ctx_internal.fill();
-    ctx_internal.fillStyle = ctx_internal.strokeStyle = '#099';
+    ctx_internal.fillStyle = ctx_internal.strokeStyle = '#ffaa1d';//'#099';-bluish
 	ctx_internal.beginPath();
     var dx = p2.x-p1.x, dy=p2.y-p1.y, len=Math.sqrt(dx*dx+dy*dy), theta=Math.atan2(dy,dx);
 	var temp=parseFloat(len)/parseFloat(Math.sqrt(Math.pow(CANVAS_WIDTH,2)+Math.pow(CANVAS_HEIGHT,2)));
@@ -811,25 +893,22 @@ function arrow(ctx_internal,p1,p2,size)
      	ctx_internal.fill();
       	ctx_internal.restore(); 	
 }
-
 function clearCanvas(ctx_internal, canvas) {
    ctx_internal.clearRect(0, 0, canvas.width, canvas.height);
 }
-
 const getClientOffset = (event, canvas) => {
     const {pageX, pageY} = event.touches ? event.touches[0] : event;
     const x = pageX - canvas.offsetLeft;
     const y = pageY - canvas.offsetTop;
     return {x,y} 
 }
-
 function process_touchstart(event)
 {
 	event.preventDefault();
 	var touches = getClientOffset(event, canvas_1);  //event.touches;changedTouches;
 	if (touches!=undefined)
 		startPosition=touches;
-	if(startPosition!=undefined && hospital_on!=1 && house_on!=1)
+	if(startPosition!=undefined && hospital_on!=1 && house_on!=1 && plause!=0)
 	{
 	console.log('sg',startPosition.x,startPosition.y);
 	velocit.x=0;velocit.y=0;
@@ -849,13 +928,12 @@ function process_touchstart(event)
 	isDrawStart=true;
 	}
 }
-
 function process_touchmove(event){
 	event.preventDefault();
 	var touches = getClientOffset(event, canvas_2);  //event.changedTouches;
 	if(!isDrawStart) return;
 		lineCoordinates=touches;
-	if(lineCoordinates!=undefined && startPosition!=undefined)
+	if(lineCoordinates!=undefined && startPosition!=undefined && plause!=0)
 	{
 		if(hospital_on!=1 && house_on!=1)  {
 			clearCanvas(ctx_2, canvas_2);
@@ -867,12 +945,11 @@ function process_touchmove(event){
 			flag=1;
 		}
 }
-
 function process_touchend(event) {
 	event.preventDefault();  //	var touches = getClientOffset(event, canvas_1);//event.changedTouches;
 	if(event)
 	{
-		if(hospital_on!=1 && house_on!=1)  {
+		if(hospital_on!=1 && house_on!=1 && plause!=0)  {
 		console.log("hippy:",velocit.x,velocit.y);
 		if(velocit.x==0)  velocit.x=immunized_initial_speed_x*posNeg()*Math.random();
 		if(velocit.y==0)  velocit.y=immunized_initial_speed_y*posNeg()*Math.random();
@@ -897,7 +974,7 @@ function process_touchend(event) {
 		isDrawStart=false;
 		hospital_on=0;
 	}
-	else if(hospital_on==1)  {
+	else if(hospital_on==1 && plause!=0)  {
 		console.log('srg',startPosition.x,startPosition.y);
 		var temp_hospi_position = (flag)?lineCoordinates:startPosition;
 		var newBall = new Ball(
@@ -917,7 +994,7 @@ function process_touchend(event) {
 			hospitals.unshift(newBall);
 			hospital_on=0;
 		}
-	else if(house_on==1)  {
+	else if(house_on==1 && plause!=0)  {
 		var min=Math.pow(startPosition.x-balls[0].p.x,2)+Math.pow(startPosition.y-balls[0].p.y,2);
 		var min_id=0;
 		for(var i=0; i<balls.length; i++)  {
@@ -938,43 +1015,12 @@ function process_touchend(event) {
 			balls[min_id].v.y=0;
 			balls[min_id].s=2;
 			balls[min_id].partner=null;
-			balls[min_id].r=10;
+			balls[min_id].r*=3;
 		}
 		}
 	}
 }
-//function init() { if (ctx_1 && ctx_2) {  //--Called with '<body onload="init()">'
-canvas_1.addEventListener('mousedown', process_touchstart,false);
-canvas_1.addEventListener('mousemove', process_touchmove,false);
-//canvas_1.addEventListener('touchcancel', process_touchcancel, false);
-canvas_1.addEventListener('mouseup', process_touchend,false);
-canvas_1.addEventListener('touchstart', process_touchstart,false);
-canvas_1.addEventListener('touchmove', process_touchmove,false);
-//canvas_1.addEventListener('touchcancel', process_touchcancel, false);
-canvas_1.addEventListener('touchend', process_touchend,false);
-
-canvas_2.addEventListener('mousedown', process_touchstart,false);
-canvas_2.addEventListener('mousemove', process_touchmove,false);
-//canvas_2.addEventListener('touchcancel', process_touchcancel, false);
-canvas_2.addEventListener('mouseup', process_touchend,false);
-canvas_2.addEventListener('touchstart', process_touchstart,false);
-canvas_2.addEventListener('touchmove', process_touchmove,false);
-//canvas_2.addEventListener('touchcancel', process_touchcancel, false);
-canvas_2.addEventListener('touchend', process_touchend,false);
-
 //sim.redraw();
-$('#stop').on('click', deactivateInterval);
-$('#new').on('click', function() {
-//	makeSim(population,fixedpopulation,lockedpopulation,infected,immunized,dead);
-	CANVAS_WIDTH = canvas_1.offsetWidth;
-	CANVAS_HEIGHT = canvas_1.offsetHeight;
-	canvas_1.width = canvas_1.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth();  //CANVAS_WIDTH;
-	canvas_1.height = canvas_1.offsetHeight;//CANVAS_HEIGHT;  //CANVAS_HEIGHT;  //window.innerHeight();  
-	canvas_2.width = canvas_1.offsetWidth;//CANVAS_WIDTH;  //window.innerWidth;  //CANVAS_WIDTH;
-	canvas_2.height = canvas_1.offsetHeight;//CANVAS_HEIGHT;  //window.innerHeight;  //CANVAS_HEIGHT;  
-    deactivateInterval();
-    makeSim(population,fixedpopulation,lockedpopulation,infected,immunized,dead);
-    activateInterval();
-    sim.redraw();
-});
-}
+//$("#play_id").on('click', function (){console.log('#');activateInterval();});
+//$('#pause_id').on('click', deactivateInterval);
+//$('#new').on('click', function();
