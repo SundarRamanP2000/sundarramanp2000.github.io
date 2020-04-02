@@ -1,4 +1,4 @@
-//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital, 6: coin#
+//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital#
 console.log("1",document.getElementById("canvas_1").offsetHeight);
 var hospital_on=0;
 var house_on=0;
@@ -52,7 +52,7 @@ var gcounter = 0;  //Global variables setup!
 var cl = CANVAS_WIDTH;
 var interval, intervalActive;
 var stateCount = { population: 0, fixedpopulation: 0, lockedpopulation: 0, infected: 0, immunized: 0, uninfected: 0, dead:0 };
-var r=20;  //Radius
+var r=6;  //Radius
 var touchesInAction = {};  //For mouse/touch event identification
 var isDrawStart, startPosition, lineCoordinates;
 var ms = 30;  //Other parameters and objects
@@ -77,7 +77,7 @@ var cointimer=50;
 var housetimer=200;
 var hospitaltimer=1000;  //300
 var slowVal = 2;  //Slow the bounced off infected ball
-var slowVal_hospi = 5;  //Slow balls which enter hospital
+var slowVal_hospi = 3;  //Slow balls which enter hospital
 var speed=290;  //247
 var crem=20;  //Time after death!
 var min_touch=10000;  //Empirical obsv.
@@ -175,8 +175,9 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
         this.p.y = this.p.y + this.v.y * dt;
     };
     this.draw = function() {
-        ctx_1.beginPath();
-       	sim.predictAll(this);
+    	if(this.partner!=null)
+    		if(this.partner.s==4)
+    			this.partner=null;
     	if(this.s==1) {  //Saving an infected before death
     		this.healtimer-=1;
     		if(this.healtimer==0)
@@ -187,10 +188,17 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
     			this.v.y=0;
     			this.partner=null;
     		}
-        	ctx_1.font = '30px serif';
-        	ctx_1.fillText(String.fromCodePoint(0x1F912),this.p.x,this.p.y);  //🤒
     	}
-    	else if(this.s==2) {  //House destroyed after some time restoring previous values
+    	if(this.s==6) {  //Coin collection before deadline
+    		this.cointimer-=1;
+    		if(this.cointimer==0){
+    			this.s=3;
+    			this.v.x=this.vold.x;
+    			this.v.y=this.vold.y;
+    			this.partner=null;
+    		}
+    	}
+    	if(this.s==2) {  //House destroyed after some time restoring previous values
     		this.v.x=0;
     		this.v.y=0;
     		this.partner=null;
@@ -200,15 +208,26 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
     			this.v.x=this.previous_v.x;
     			this.v.y=this.previous_v.y;
     		}
-        	ctx_1.font = '30px serif';
-        	ctx_1.fillText('🏠',this.p.x,this.p.y);
     	}
-        else if (this.s == 5)  {
+    	sim.predictAll(this);
+        if (this.partner != null) {
+            ctx_1.beginPath();
+            ctx_1.moveTo(this.p.x, this.p.y);
+            ctx_1.lineTo(this.partner.p.x, this.partner.p.y);
+            ctx_1.lineWidth = 1;
+            ctx_1.strokeStyle = "#a6a6a6";
+            ctx_1.stroke();
+        }
+        ctx_1.beginPath();
+        if (this.s == 5)  {
     		this.hospitaltimer-=1;
         	if(this.hospitaltimer<10) { 
          		if(this.hospitaltimer%4==0) {
-        	ctx_1.font = '30px serif';
-        	ctx_1.fillText('🏥',this.p.x,this.p.y);
+        	var temp_r = parseFloat(this.r)/parseFloat(hospital_radius_factor);
+            ctx_1.rect(this.p.x, this.p.y - temp_r, temp_r, temp_r * 3);
+            ctx_1.rect(this.p.x - temp_r, this.p.y, temp_r * 3, temp_r);
+            ctx_1.fillStyle = "#013220";  //'rgba(0,255,0,1)';  //"#00c851"  //Green
+            ctx_1.fill();
         	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
         	ctx_1.fillStyle = 'rgba(124,252,0,0.4)';
 	   		if(this.hospitaltimer==0)  {
@@ -216,37 +235,77 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
         		hospitals.splice(balls.indexOf(this),1);
         	}
     			}
+
         	}
         	else {
-        	ctx_1.font = '30px serif';
-        	ctx_1.fillText('🏥',this.p.x,this.p.y);
-	       	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
+        	var temp_r = parseFloat(this.r)/parseFloat(hospital_radius_factor);
+            ctx_1.rect(this.p.x-parseFloat(temp_r)/parseFloat(2), this.p.y - parseFloat(3*temp_r)/parseFloat(2), temp_r, temp_r * 3);
+            ctx_1.rect(this.p.x - parseFloat(3*temp_r)/parseFloat(2), this.p.y-parseFloat(temp_r)/parseFloat(2), temp_r * 3, temp_r);
+            ctx_1.fillStyle = "#013220";  //'rgba(0,255,0,1)';  //"#00c851"  //Green
+            ctx_1.fill();
+        	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
         	ctx_1.fillStyle = 'rgba(124,252,0,0.2)';
         	}
         }
         else if(this.s==3)  {
-        	ctx_1.font = '30px serif';
-        	ctx_1.fillText('😷',this.p.x,this.p.y);
+		    ctx_1.beginPath();
+ 			ctx_1.arc(this.p.x,this.p.y,r,0,Math.PI, false);
+      		ctx_1.closePath();
+      		ctx_1.lineWidth = 1;
+      		ctx_1.fillStyle = "#00CED1";  //Dark Turquoise bottom semicircle--immunized
+      		ctx_1.fill();
+      		ctx_1.strokeStyle = "#00CED1";
+      		ctx_1.stroke();
+	    	ctx_1.beginPath();
+ 			ctx_1.arc(this.p.x,this.p.y,r,Math.PI,2*Math.PI,false);
+      		ctx_1.closePath();
 		}
 		else if (this.s==4)  {
     		this.crem-=1;
+    		console.log('iii',this.crem);
 		    if(this.crem<10) { 
        		if(this.crem%4==0) {
-	       	ctx_1.font = '30px serif';
-        	ctx_1.fillText('👻',this.p.x,this.p.y);
+		        ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
+		        ctx_1.fillStyle = "#000000";  //Black  //"#798b47";  //"#ff4444";
+            	ctx_1.fill();
         	if(this.crem==0)
 	   			balls.splice(balls.indexOf(this),1);
         	}
         	}
-         else {       	
-        	ctx_1.font = '30px serif';
-        	ctx_1.fillText('👻',this.p.x,this.p.y);
+        else if (this.s==2)  {
+
+        	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
+        	ctx_1.fillStyle = 'rgba(124,252,0,0.2)';
+
+        }
+
+        else {
+        	
+		        ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
+		        ctx_1.fillStyle = "#000000";  //'rgba(0,255,0,1)';  //"#00c851"  //Green
+            	ctx_1.fill();
         	}
  		}
         else{ 
-        	ctx_1.font = '30px serif'
-        	ctx_1.fillText('🙂',this.p.x,this.p.y);
+           ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
         }
+        switch (this.s) {
+            case 0:
+                ctx_1.fillStyle = "#8c8c8c";  //Grey--uninfected
+                break;
+            case 1:
+                ctx_1.fillStyle = 'rgba(255,0,0,1)';//"#8D0000";  //"#ff4444";  //Red--infected
+                break;
+            case 2:
+                ctx_1.fillStyle = "#ff00ff";  //Magenta--lockeddown                     --change to icon
+                break;
+            case 3:
+                ctx_1.fillStyle =  "#8c8c8c";  //Grey top semicircle--immunized
+                break;
+        	case 6:
+        		ctx_1.fillStyle = "#ffd700";  //Yellow
+        }
+        ctx_1.fill();
     };
 
     this.equals = function(ball) {  //Equality comparator
@@ -718,9 +777,18 @@ function arrow(ctx_internal,p1,p2,size)
 {
 	ctx_internal.save();
 	    ctx_internal.beginPath();
-       	ctx_1.font = '30px serif';
-       	ctx_1.fillText('😷',startPosition.x,startPosition.y);
+ 		ctx_internal.arc(startPosition.x,startPosition.y,r,0,Math.PI, false);
       	ctx_internal.closePath();
+      	ctx_internal.lineWidth = 1;
+      	ctx_internal.fillStyle = "#00CED1";  //Dark Turquoise bottom semicircle--immunized
+      	ctx_internal.fill();
+      	ctx_internal.strokeStyle = "#00CED1";
+      	ctx_internal.stroke();
+	    ctx_internal.beginPath();
+ 		ctx_internal.arc(startPosition.x,startPosition.y,r,Math.PI,2*Math.PI,false);
+      	ctx_internal.closePath();
+		ctx_internal.fillStyle = "#8c8c8c";  //Grey!
+        ctx_internal.fill();
     ctx_internal.fillStyle = ctx_internal.strokeStyle = '#099';
 	ctx_internal.beginPath();
     var dx = p2.x-p1.x, dy=p2.y-p1.y, len=Math.sqrt(dx*dx+dy*dy), theta=Math.atan2(dy,dx);
@@ -765,8 +833,19 @@ function process_touchstart(event)
 	{
 	console.log('sg',startPosition.x,startPosition.y);
 	velocit.x=0;velocit.y=0;
-	ctx_1.font = '30px serif';
-    ctx_1.fillText('😷',startPosition.x,startPosition.y);
+	    ctx_1.beginPath();
+ 		ctx_1.arc(startPosition.x,startPosition.y,r,0,Math.PI, false);
+      	ctx_1.closePath();
+      	ctx_1.lineWidth = 0.5;
+      	ctx_1.fillStyle = "#00CED1";  //Dark Turquoise bottom semicircle--immunized
+      	ctx_1.fill();
+      	ctx_1.strokeStyle = "#00CED1";
+      	ctx_1.stroke();
+	    ctx_1.beginPath();
+ 		ctx_1.arc(startPosition.x,startPosition.y,r,Math.PI,2*Math.PI,false);
+      	ctx_1.closePath();
+		ctx_1.fillStyle = "#8c8c8c";  //Grey!
+        ctx_1.fill();
 	isDrawStart=true;
 	}
 }
