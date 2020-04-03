@@ -39,13 +39,15 @@ var hospitaltimer=1000;  //300
 var slowVal = 2;  //Slow the bounced off infected ball
 var slowVal_hospi = 3;  //Slow balls which enter hospital
 var speed=290;  //247
-var crem=50;  //Time after death!
+var crem=70;  //Time after death!
 var min_touch=10000;  //Empirical obsv.
 var immunized_initial_speed_x=100;  //Initial speed of immunized in x direction!
 var immunized_initial_speed_y=100;  //Initial speed of immunized in y direction!
 ///END:   Toy parameters for good UX!
 var elem = document.documentElement;
 var first_time=1;
+var olympic_radius=50;
+var circles;  //Olympic circles 
 var stateProxy = new Proxy(stateCount, {
     set: function(target, key, value) {
         target[key] = value;
@@ -120,6 +122,45 @@ $("#play_id").click(function play(){ console.log('2',plause);
 				canvas_2.addEventListener('touchmove', process_touchmove,false);
 				//canvas_2.addEventListener('touchcancel', process_touchcancel, false);
 				canvas_2.addEventListener('touchend', process_touchend,false);
+        		console.log(CANVAS_HEIGHT,CANVAS_WIDTH);
+        		circles = [
+{
+    color:'grey',
+    x : CANVAS_WIDTH/2 - 2.5*olympic_radius,  //2*olympic_radius - olympic_radius/2,
+    y : 1.2*olympic_radius,
+    text: '2',
+    id: '0',
+    isTop: true
+  } , {
+    color:'black',
+    x : CANVAS_WIDTH/2,  //4*olympic_radius,
+    y : 1.2*olympic_radius,
+    text: '6',
+    id: '4',
+    isTop: true
+  } , {
+    color:'red',
+    x : CANVAS_WIDTH/2 + 2.5*olympic_radius,  //6*olympic_radius + olympic_radius/2,
+    y : 1.2*olympic_radius,
+    text: 578,
+    id: '1',
+    isTop: true
+  } , {
+    color:'gold',
+    x : CANVAS_WIDTH/2 - 5/4*olympic_radius,  //3*olympic_radius - olympic_radius/4,
+    y : 2.2*olympic_radius,
+    text: '4',
+    id:'2',
+    isTop: false
+  } , {
+    color:'green',
+    x : CANVAS_WIDTH/2 + 5/4*olympic_radius,  //5*olympic_radius + olympic_radius/4,
+    y : 2.2*olympic_radius,
+    text: '3',
+    id:'3',
+    isTop: false
+  }
+];
       			makeSim(population,fixedpopulation,lockedpopulation,infected,immunized,dead);
     			activateInterval();
     			sim.redraw();
@@ -210,6 +251,16 @@ function MinPQ() { //Minimum Priority Queue
         this.heap[i] = this.heap[j];
         this.heap[j] = swap;
     };
+}
+function drawArc(circle, start, end, text='') {
+    ctx_1.lineWidth = circle.color === 'white' ? 16 : 3;
+	ctx_1.strokeStyle = circle.color;
+    ctx_1.beginPath();
+    ctx_1.arc(circle.x, circle.y, olympic_radius, start - Math.PI/2, end - Math.PI/2, true);
+    ctx_1.stroke();
+	ctx_1.font = '30px serif'; 
+	ctx_1.fillStyle = circle.color;    
+    ctx_1.fillText(circle.text,circle.x,circle.y);  //circle.x-10,circle.y+12.5);
 }
 function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospitaltimer, crem) {  //Ball constructor
     this.p = { x: posX, y: posY };
@@ -419,7 +470,19 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
                 break;
         	case 6:
         		ctx_1.fillStyle = "#ffd700";ctx_1.fill();  //Yellow (gold for coins)
-        }
+        	}
+        	circles.forEach(function(circle){
+  				drawArc(circle, 0, Math.PI*2);	
+			});
+			circles.forEach(function(circle){
+  			if (circle.isTop)  {
+     			drawArc(circle,Math.PI, Math.PI*2/3);
+     			drawArc(circle,Math.PI*5/3, Math.PI*4/3);
+  			} else  {
+     			drawArc(circle,0, Math.PI/3);
+     			drawArc(circle,Math.PI*2/3, Math.PI/3);
+  			}
+			});     
     };
     this.equals = function(ball) {  //Equality comparator
         return (
@@ -1009,7 +1072,7 @@ function process_touchend(event) {
 		var min=Math.pow(startPosition.x-balls[0].p.x,2)+Math.pow(startPosition.y-balls[0].p.y,2);
 		var min_id=0;
 		for(var i=0; i<balls.length; i++)  {
-			if(balls[i].s!=2)  {
+			if(balls[i].s!=2 && balls[i].s!=4 && balls[i]!=5)  {
 			var temp_dist=Math.pow(startPosition.x-balls[i].p.x,2)+Math.pow(startPosition.y-balls[i].p.y,2);
 			if(temp_dist<min)  {
 				min=temp_dist;
