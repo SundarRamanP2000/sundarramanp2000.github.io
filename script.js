@@ -478,7 +478,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
                 break;
         	case 6:
         		ctx_1.fillStyle = "#ffd700";ctx_1.fill();  //Yellow (gold for coins)
-        	}
+        	}/*
         	circles.forEach(function(circle){
   				drawArc(circle, 0, Math.PI*2);	
 			});
@@ -490,7 +490,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
      			drawArc(circle,0, Math.PI/3);
      			drawArc(circle,Math.PI*2/3, Math.PI/3);
   			}
-			});     
+			});*/     
     };
     this.equals = function(ball) {  //Equality comparator
         return (
