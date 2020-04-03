@@ -128,21 +128,21 @@ $("#play_id").click(function play(){ console.log('2',plause);
     color:'grey',
     x : CANVAS_WIDTH/2 - 2.5*olympic_radius,  //2*olympic_radius - olympic_radius/2,
     y : 1.2*olympic_radius,
-    text: '2',
+    text: stateProxy.uninfected,
     id: '0',
     isTop: true
   } , {
     color:'black',
     x : CANVAS_WIDTH/2,  //4*olympic_radius,
     y : 1.2*olympic_radius,
-    text: '6',
+    text: stateProxy.dead,
     id: '4',
     isTop: true
   } , {
     color:'red',
     x : CANVAS_WIDTH/2 + 2.5*olympic_radius,  //6*olympic_radius + olympic_radius/2,
     y : 1.2*olympic_radius,
-    text: 578,
+    text: stateProxy.infected,
     id: '1',
     isTop: true
   } , {
@@ -156,7 +156,7 @@ $("#play_id").click(function play(){ console.log('2',plause);
     color:'green',
     x : CANVAS_WIDTH/2 + 5/4*olympic_radius,  //5*olympic_radius + olympic_radius/4,
     y : 2.2*olympic_radius,
-    text: '3',
+    text: '2',
     id:'3',
     isTop: false
   }
@@ -259,7 +259,15 @@ function drawArc(circle, start, end, text='') {
     ctx_1.arc(circle.x, circle.y, olympic_radius, start - Math.PI/2, end - Math.PI/2, true);
     ctx_1.stroke();
 	ctx_1.font = '30px serif'; 
-	ctx_1.fillStyle = circle.color;    
+	ctx_1.fillStyle = circle.color;
+	switch(circle.id)
+	{
+		case '0':  circle.text=stateProxy.uninfected;  break;
+		case '4':  circle.text=stateProxy.dead;  break;
+		case '1':  circle.text=stateProxy.infected;  break;
+		case '2':  circle.text='4';  break;
+		case '3':  circle.text='3'; break;
+	}    
     ctx_1.fillText(circle.text,circle.x,circle.y);  //circle.x-10,circle.y+12.5);
 }
 function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospitaltimer, crem) {  //Ball constructor
@@ -291,7 +299,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
     		this.healtimer-=1;
     		if(this.healtimer==0)
     		{
-    			stateProxy.dead-=1;
+    			stateProxy.dead+=1;
     			this.s=4;
     			this.v.x=0;
     			this.v.y=0;
@@ -422,7 +430,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
        		this.healtimer-=1;
     		if(this.healtimer==0)
     		{
-    			stateProxy.dead-=1;
+    			stateProxy.dead+=1;
     			this.s=4;
     			this.r/=3;
     			this.v.x=0;
