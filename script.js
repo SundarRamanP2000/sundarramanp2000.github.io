@@ -32,14 +32,14 @@ var infected=5;
 var immunized=0;
 var dead=0;
 var hospital_radius_factor=10;
-var healtimer=3000;
+var healtimer=1000;
 var cointimer=50;
 var housetimer=200;
 var hospitaltimer=1000;  //300
 var slowVal = 2;  //Slow the bounced off infected ball
 var slowVal_hospi = 3;  //Slow balls which enter hospital
 var speed=290;  //247
-var crem=20;  //Time after death!
+var crem=50;  //Time after death!
 var min_touch=10000;  //Empirical obsv.
 var immunized_initial_speed_x=100;  //Initial speed of immunized in x direction!
 var immunized_initial_speed_y=100;  //Initial speed of immunized in y direction!
@@ -291,6 +291,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
 	       	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
         	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
         	ctx_1.fillStyle = 'rgba(124,252,0,0.3)';
+        	ctx_1.fill();
 	   		if(this.hospitaltimer==0)  {
 	   			balls.splice(balls.indexOf(this),1);
         		hospitals.splice(balls.indexOf(this),1);
@@ -308,6 +309,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
            	ctx_1.fillText('🏥',this.p.x,this.p.y);*/
         	ctx_1.arc(this.p.x,this.p.y,this.r,0,2*Math.PI);
         	ctx_1.fillStyle = 'rgba(124,252,0,0.2)';
+        	ctx_1.fill();
         	}
         }
         else if(this.s==3)  {
@@ -325,19 +327,18 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
 		}
 		else if (this.s==4)  {
     		this.crem-=1;
-    		console.log('iii',this.crem);
 		    if(this.crem<20) { 
-       		if(this.crem%2==0) {
+       		if(this.crem%4!=0) {
 		        ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
 		        ctx_1.fillStyle = "#000000";  //Black  //"#798b47";  //"#ff4444";
             	ctx_1.fill();
-        	if(this.crem==0)
-	   			balls.splice(balls.indexOf(this),1);
-        	}
+        	}/*
         	else  {
         	ctx_1.font = '30px serif';
         	ctx_1.fillText('👻',this.p.x-4,this.p.y-3);  //ballpark!
-        	}
+        	}*/
+        	if(this.crem==0)
+	   			balls.splice(balls.indexOf(this),1);
         	}
         else {
         	
@@ -367,6 +368,16 @@ function Ball(posX, posY, velX, velY, r, healtimer, cointimer, housetimer, hospi
             ctx_1.arc(this.p.x, this.p.y,temp_rad, 0, 2 * Math.PI);
             ctx_1.fillStyle = 'rgba(255,0,0,1)';
             ctx_1.fill();
+       		this.healtimer-=1;
+    		if(this.healtimer==0)
+    		{
+    			stateProxy.dead-=1;
+    			this.s=4;
+    			this.r/=3;
+    			this.v.x=0;
+    			this.v.y=0;
+    			this.partner=null;
+    		}
         	}
         	else if(this.previous_s==0){
             ctx_1.arc(this.p.x, this.p.y,temp_rad, 0, 2 * Math.PI);
@@ -998,11 +1009,12 @@ function process_touchend(event) {
 		var min=Math.pow(startPosition.x-balls[0].p.x,2)+Math.pow(startPosition.y-balls[0].p.y,2);
 		var min_id=0;
 		for(var i=0; i<balls.length; i++)  {
+			if(balls[i].s!=2)  {
 			var temp_dist=Math.pow(startPosition.x-balls[i].p.x,2)+Math.pow(startPosition.y-balls[i].p.y,2);
 			if(temp_dist<min)  {
 				min=temp_dist;
 				min_id=i;
-			}
+			}}
 		}
 		console.log('mintouch',min);
 		if(min<=min_touch)  {
