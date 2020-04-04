@@ -282,6 +282,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
 	            		);
 					newBall.vabs = Math.sqrt(Math.pow(temp_v_x,2)+Math.pow(temp_v_y,2));
 					newBall.s=0;
+					console.log(newBall.r);
 					balls.unshift(newBall);  //push()
 			    	}
 		}
@@ -572,8 +573,9 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
         		this.s = 0;
         		ball.s=0;  //Infected recovered!
         		ball.partner=null;
-            	stateProxy.infected+=1;
-            	stateProxy.uninfected-=1;
+            	stateProxy.infected-=1;
+            	stateProxy.uninfected+=2;
+            	stateProxy.coins+=1;
 	            this.partner = null;
 //    	        this.v.x = this.v.x/slowVal;
   //      	    this.v.y = this.v.y/slowVal;
@@ -584,7 +586,6 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
         	if(ball.s==0){
         		ball.s = 1;
        			this.healtimer=healtimer;
-        		stateProxy.infected+=1;
         		stateProxy.infected+=1;
             	stateProxy.uninfected-=1;
             	ball.partner = this;
@@ -597,6 +598,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
        			this.s=0;  //Infected recovered.
        			this.partner=null;
        			stateProxy.uninfected+=1;
+       			stateProxy.coins+=1;
 	//           	ball.v.x = this.v.x/slowVal;
       //      	ball.v.y = this.v.y/slowVal;
        			sim.predictAll(ball);
@@ -717,8 +719,12 @@ function Sim(balls) {  //Sim constructor
         					balls[i].v.x*=slowVal_hospi;
         					balls[i].v.y*=slowVal_hospi;
         					balls[i].vabs*=slowVal_hospi;
-        					if(balls[i].s==1)
+        					if(balls[i].s==1){
         						balls[i].s=0;
+        						stateProxy.coins+=1;
+        						stateProxy.uninfected+=1;
+        						stateProxy.infected-=1;
+        					}
         					}
         					balls[i].draw();
         			}
@@ -1075,7 +1081,7 @@ function process_touchend(event) {
 		var min=Math.pow(startPosition.x-balls[0].p.x,2)+Math.pow(startPosition.y-balls[0].p.y,2);
 		var min_id=0;
 		for(var i=0; i<balls.length; i++)  {
-			if(balls[i].s!=2 && balls[i].s!=4 && balls[i]!=5 && balls[i].radius!=1.75*r)  {
+			if(balls[i].s!=2 && balls[i].s!=4 && balls[i].s!=5 && balls[i].r!=1.75*r)  {
 			var temp_dist=Math.pow(startPosition.x-balls[i].p.x,2)+Math.pow(startPosition.y-balls[i].p.y,2);
 			if(temp_dist<min)  {
 				min=temp_dist;
