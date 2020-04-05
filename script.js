@@ -25,14 +25,14 @@ var velocit = {x: 0, y: 0};  //For newly created balls by click/mouse.
 var max_velocit=5000; //Maxium velocity of newly created balls^|^
 var elasticity=0.9;  //Co-efficient of restitution of collision!
 ///BEGIN:   Toy parameters for good UX!
-var population=30;  //Total population 
+var population=20;  //Total population 
 var fixedpopulation=0;  //Initial fixed population (part of 'population')
 var lockedpopulation=0;
-var infected=10;
+var infected=4;
 var immunized=0;
 var dead=0;
 var hospital_radius_factor=10;
-var healtimer=1000;
+var healtimer=800;
 var housetimer=200;
 var hospitaltimer=1000;  //300
 var slowVal = 2;  //Slow the bounced off infected ball
@@ -216,13 +216,13 @@ function MinPQ() { //Minimum Priority Queue
 function scorer()  { 
 	ctx_1.font='20px serif';  //DEAD
 	ctx_1.fillStyle='rgba(255,255,255,1)';
-	ctx_1.fillText(String.fromCodePoint(0x1F47B)+' '+stateProxy.dead,15,25);  //👻
+	ctx_1.fillText(String.fromCodePoint(0x1F47B)+' '+stateProxy.dead,15,15);  //👻
 	ctx_1.fillStyle='rgba(255,0,0,1)';  //INFECTED
-	ctx_1.fillText(String.fromCodePoint(0x1F912)+' '+stateProxy.infected,15,55);  //🤒
+	ctx_1.fillText(String.fromCodePoint(0x1F912)+' '+stateProxy.infected,15,35);  //🤒
 	ctx_1.fillStyle='#ffd700';  //COINS
-	ctx_1.fillText(stateProxy.coins+' '+String.fromCodePoint(0x1F4B0),CANVAS_WIDTH-45,25);  //💰
+	ctx_1.fillText(stateProxy.coins+' '+String.fromCodePoint(0x1F4B0),CANVAS_WIDTH-50,15);  //💰
 	ctx_1.fillStyle='#00CED1';  //MASED
-	ctx_1.fillText(stateProxy.immunized+' '+String.fromCodePoint(0x1F637),CANVAS_WIDTH-45,55);  //😷
+	ctx_1.fillText(stateProxy.immunized+' '+String.fromCodePoint(0x1F637),CANVAS_WIDTH-50,35);  //😷
 	ctx_1.fillStyle='rgba(255,255,255,1)';  //FINAL SCORE!
 	ctx_1.fillText('SCORE: '+stateProxy.score,CANVAS_WIDTH/2-20,15);
 }
@@ -402,8 +402,8 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
             ctx_1.arc(this.p.x, this.p.y,temp_rad, 0, 2 * Math.PI);//ctx_1.fillStyle = 'rgba(255,0,0,1-parseFloat(this.healtimer)/parseFloat(healtimer))';
            	var brightness = Math.ceil(10*(parseFloat(this.healtimer)/parseFloat(healtimer)));
             switch(brightness){
-                	case 0:  ctx_1.fillStyle = 'rgba(255,0,0,0.5)';  break;
-                	case 1:  ctx_1.fillStyle = 'rgba(255,0,0,0.55)';  break;
+                	case 0:  ctx_1.fillStyle = 'rgba(255,0,0,0.4)';  break;
+                	case 1:  ctx_1.fillStyle = 'rgba(255,0,0,0.5)';  break;
                 	case 2:  ctx_1.fillStyle = 'rgba(255,0,0,0.6)';  break;
                 	case 3:  ctx_1.fillStyle = 'rgba(255,0,0,0.65)';  break;
 					case 4:  ctx_1.fillStyle = 'rgba(255,0,0,0.7)';  break;
@@ -447,8 +447,8 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
             case 1:
             	var brightness = Math.ceil(10*(parseFloat(this.healtimer)/parseFloat(healtimer)));
                 switch(brightness){
-                	case 0:  ctx_1.fillStyle = 'rgba(255,0,0,0.5)';  break;
-                	case 1:  ctx_1.fillStyle = 'rgba(255,0,0,0.55)';  break;
+                	case 0:  ctx_1.fillStyle = 'rgba(255,0,0,0.4)';  break;
+                	case 1:  ctx_1.fillStyle = 'rgba(255,0,0,0.5)';  break;
                 	case 2:  ctx_1.fillStyle = 'rgba(255,0,0,0.6)';  break;
                 	case 3:  ctx_1.fillStyle = 'rgba(255,0,0,0.65)';  break;
 					case 4:  ctx_1.fillStyle = 'rgba(255,0,0,0.7)';  break;
@@ -1067,7 +1067,7 @@ function process_touchend(event) {
 		var min=Math.pow(startPosition.x-balls[0].p.x,2)+Math.pow(startPosition.y-balls[0].p.y,2);
 		var min_id=0;
 		for(var i=0; i<balls.length; i++)  {
-			if(balls[i].s!=2 && balls[i].s!=4 && balls[i].s!=5 && balls[i].r!=1.75*r)  {
+			if(balls[i].s!=2 && balls[i].s!=4 && balls[i].s!=5 && balls[i].r!=1.75*r && balls[i]!=2*r)  {
 			var temp_dist=Math.pow(startPosition.x-balls[i].p.x,2)+Math.pow(startPosition.y-balls[i].p.y,2);
 			if(temp_dist<min)  {
 				min=temp_dist;
