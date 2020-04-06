@@ -37,7 +37,7 @@ var housetimer=200;
 var hospitaltimer=400;  //300
 var slowVal = 2;  //Slow the bounced off infected ball
 var slowVal_hospi = 2;  //Slow balls which enter hospital
-var speed=80;  //247
+var speed=60;  //247
 var crem=70;  //Time after death!
 var min_touch=8000;  //Empirical obsv.
 var immunized_initial_speed_x=100;  //Initial speed of immunized in x direction!
@@ -47,6 +47,7 @@ var elem = document.documentElement;
 var first_time=1;
 var olympic_radius=50;
 var gimmick=800;
+var raji_hospi=0;  //To stall coin increment when hospital icon is displayed!
 var stateProxy = new Proxy(stateCount,  {
     set: function(target, key, value)  {
         target[key] = value;
@@ -274,6 +275,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
     	if(stateProxy.coins>=4)  {
     		var button = document.getElementById('b1');
 			button.style.display = 'block';
+			raji_hospi=1;
 		}
 		else  {
 			var button = document.getElementById('b1');
@@ -595,7 +597,8 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
         		ball.partner=null;
             	stateProxy.infected-=1;
             	stateProxy.uninfected+=2;
-            	stateProxy.coins+=1;
+            	if(raji_hospi!=1)
+            		stateProxy.coins+=1;
 	            this.partner = null;
 //    	        this.v.x = this.v.x/slowVal;
   //      	    this.v.y = this.v.y/slowVal;
@@ -619,7 +622,8 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
        			stateProxy.saved+=1;
        			this.partner=null;
        			stateProxy.uninfected+=1;
-       			stateProxy.coins+=1;
+       			if(raji_hospi!=1)
+	       			stateProxy.coins+=1;
 	//           	ball.v.x = this.v.x/slowVal;
       //      	ball.v.y = this.v.y/slowVal;
        			sim.predictAll(ball);
@@ -742,7 +746,8 @@ function Sim(balls) {  //Sim constructor
         					if(balls[i].s==1){
         						balls[i].s=0;
         						stateProxy.saved+=1;
-        						stateProxy.coins+=1;
+        						if(raji_hospi!=1)
+ 		       						stateProxy.coins+=1;
         						stateProxy.uninfected+=1;
         						stateProxy.infected-=1;
         					}
@@ -1080,12 +1085,13 @@ function process_touchend(event) {
 			hospitals.unshift(newBall);
 			hospital_on=0;
 			stateProxy.coins-=4;
+			raji_hospi=0;
 		}
 	else if(house_on==1 && plause!=0)  {
 		var min=Math.pow(startPosition.x-balls[0].p.x,2)+Math.pow(startPosition.y-balls[0].p.y,2);
 		var min_id=0;
 		for(var i=0; i<balls.length; i++)  {
-			if(balls[i].s!=2 && balls[i].s!=4 && balls[i].s!=5 && balls[i].r!=1.75*r && balls[i]!=2*r)  {
+			if(balls[i].s!=2 && balls[i].s!=4 && balls[i].s!=5 && balls[i].r!=1.75*r && balls[i].r!=2*r)  {
 			var temp_dist=Math.pow(startPosition.x-balls[i].p.x,2)+Math.pow(startPosition.y-balls[i].p.y,2);
 			if(temp_dist<min)  {
 				min=temp_dist;
