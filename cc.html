@@ -18,13 +18,57 @@
    
     <div id="canvas"><canvas id="canvas_1"></canvas>
 	<canvas id="canvas_2"></canvas><canvas id="canvas_3"></canvas>   
+
+
+    <div id="openModal" class="modalDialog one">
+     <div>  
+        <h2 id="stage">STAGE 0</h2>
+    </div>
+    </div>
+    
+    <div class="modalDialog two" style=
+    "display: none;
+    margin: 0 auto;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: white;
+    position: absolute;
+    border-radius: 10px;
+    background: -moz-linear-gradient(#fff, #999);
+    background: -webkit-linear-gradient(#fff, #999);
+    background: -o-linear-gradient(#fff, #999);
+    "
+    id="gameover">
+    <div>
+        <h2 id="gameover1" style="color: red; font-size: 40px;">GAME OVER</h2>
+        <h3 id="gameover2" align="center" style="color: black; font-size: 20px">SCORE: 0</h3> 
+    <button align="center" type="submit" class="btn two" onclick="restart()" style="
+  display: inline-block;
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 85%;
+  text-align: center;
+  margin-bottom:10px;
+  opacity: 0.8;
+    ">Play Again!</button> <br/><br/>
+           <h4 id="gameover1" align="center" style="color: black; font-size: 20px;">#stay_home #save_lives</h4>
+       </div>
+    </div>
+
          <button type="button" id="b1" class="btn btn-danger btn-circle btn-lg" style="display: none;  position: absolute; bottom:10px; left:10px;background-color: red;"
-         onclick="hospitalOn()"><i class="fa fa-hospital-o" aria-hidden="true" style=" position: absolute; bottom:3.5px; left:8.5px;  font-size:40px"></i></button>
-         <button class="btn" id="play_id" style="position: absolute; left: 45%; bottom: 10px;"><i class="fa fa-play" id="play_i"></i></button>
+         onclick="hospitalOn()"><i id="b1_1" class="fa fa-hospital-o" aria-hidden="true" style=" position: absolute; bottom:3.5px; left:8.5px;  font-size:40px">*1</i></button>
+         <button class="btn" id="play_id" style="position: absolue; left: 48%; bottom: 10px; transform: translate(-50, 0%)"><i class="fa fa-play" id="play_i"></i></button>
          <button type="button" id="b2" class="btn btn-info btn-circle btn-lg" style="display: none; position: absolute; bottom:10px; right:10px;background-color: red;"
-         onclick="houseOn()"><i class="fa fa-lock" aria-hidden="true" style="position: absolute; bottom:4px; left:12px;  font-size:40px"></i></button>
-  <!button style="position: absolute; bottom:20px; left:220px;" id="new"><!/button>
-   </div>
+         onclick="houseOn()"><i id="b2_1" class="fa fa-lock" aria-hidden="true" style="position: absolute; bottom:4px; left:12px;  font-size:40px;">*1</i></button>
+  </div>
 </body>
 
 </html>
