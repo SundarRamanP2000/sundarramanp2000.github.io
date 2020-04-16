@@ -1,4 +1,4 @@
-//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital, 6:healed#
+//#0:uninfected, 1:infected, 2:locked, 3: immunized, 4: dead, 5: hospital, 6:healed#//
 var hospital_on=0;  //Global variables setup!
 var house_on=0;
 var flag=0;  //Used for locating hospital, lock or masked?
@@ -312,28 +312,17 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
     			speed+=30;
    				population+=2;
    				infected+=2;;
+      			stateProxy.coins_lock=0;
+				stateProxy.coins_hospi=0;
       			makeSim(population,fixedpopulation,lockedpopulation,infected);
-        		stateProxy.vaccines=infected;
+        		stateProxy.vaccines=infected;		
     			activateInterval();
     			sim.redraw();
     			}	
     	}
     	scorer();
-    	if(stateProxy.coins_hospi>=4)  {
-    		document.getElementById('b1').style.display = 'block';
-			document.getElementById('b1_1').innerHTML = '*'+ parseInt(stateProxy.coins_hospi/4);
-		}
-		else  {
-			document.getElementById('b1').style.display = 'none';
-		}
-    	if(stateProxy.coins_lock>=4)  {
-    		document.getElementById('b2').style.display = 'block';
-			document.getElementById('b2_1').innerHTML = '*'+ parseInt(stateProxy.coins_lock/4);
-
-    	}
-    	else  {
-    		document.getElementById('b2').style.display = 'none';
-		}
+		document.getElementById('n_h').innerHTML = '*'+ parseInt(stateProxy.coins_hospi/4);
+		document.getElementById('n_l').innerHTML = parseInt(stateProxy.coins_lock/4)+'*';
     	stateProxy.score = stateProxy.saved - stateProxy.dead;
 		if(gimmick>=0)  {
     		gimmick-=1;
