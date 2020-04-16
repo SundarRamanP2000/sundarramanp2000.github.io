@@ -50,7 +50,6 @@ var olympic_radius=50;
 var gimmick=800;
 var level_switcher=100;
 var stage=0;
-var global_healtimer=healtimer;
 var raji_hospi=0;  //To stall coin increment when hospital icon is displayed!
 var stateProxy = new Proxy(stateCount,  {
     set: function(target, key, value)  {
@@ -87,7 +86,6 @@ function restart(){
 	speed=247;
 	stateProxy.coins_lock=0;
 	stateProxy.coins_hospi=0;
-	global_healtimer=healtimer;
 }
 
 function sleep(milliseconds) {
@@ -299,9 +297,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
         this.p.y = this.p.y + this.v.y * dt;
     };
     this.draw = function() {
-    	console.log('infected',stateProxy.infected,global_healtimer);
-    	if(this.r!=global_r)
-    		global_healtimer = this.healtimer; 
+    	console.log('infected',stateProxy.infected);
     	if(stateProxy.infected==0){
     		level_switcher-=1;
     		if(level_switcher==0){
@@ -342,7 +338,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
 	                	temp_v_x,
 	                	temp_v_y,
 	                	1.75*global_r,
-	           			global_healtimer,
+	           			healtimer,
 						housetimer,
 						hospitaltimer,
 						crem
@@ -1120,7 +1116,8 @@ function process_touchend(event) {
 		}
 	}
 	else if(hospital_on==1 && plause!=0)  {
-//		console.log('srg',startPosition.x,startPosition.y);
+		hospital_on=0;
+		if(stateProxy.coins_hospi>0)  {
 		var temp_hospi_position = (flag)?lineCoordinates:startPosition;
 		var newBall = new Ball(
 	                temp_hospi_position.x,
@@ -1135,15 +1132,16 @@ function process_touchend(event) {
 				);
 			newBall.s=5;
 			balls.unshift(newBall);
-			hospitals.unshift(newBall);
-			hospital_on=0;
+			hospitals.unshift(newBall);			
 			stateProxy.coins_hospi-=4;
-		}
+		}}
 	else if(house_on==1 && plause!=0)  {
+		if(stateProxy.coins_lock>0){
 		var min=Math.pow(startPosition.x-balls[0].p.x,2)+Math.pow(startPosition.y-balls[0].p.y,2);
 		var min_id=0;
 		for(var i=0; i<balls.length; i++)  {
-			if(balls[i].s!=2 && balls[i].s!=4 && balls[i].s!=5 && balls[i].s!=6 && balls[i].r!=1.75*global_r && balls[i].r!=2*global_r)  {
+			if(balls[i].s!=2 && balls[i].s!=4 && balls[i].s!=5 && balls[i].s!=6 && balls[i].s!=7 && balls[i].r==global_r && balls[i].r!=2*global_r)  {
+				console.log('sgrrr',balls[i].r);
 			var temp_dist=Math.pow(startPosition.x-balls[i].p.x,2)+Math.pow(startPosition.y-balls[i].p.y,2);
 			if(temp_dist<min)  {
 				min=temp_dist;
@@ -1162,7 +1160,8 @@ function process_touchend(event) {
 			balls[min_id].partner=null;
 			balls[min_id].r*=2;
 			stateProxy.coins_lock-=4;
-		}
+		}}
+		else house_on=0;
 		}
 	}
 }
