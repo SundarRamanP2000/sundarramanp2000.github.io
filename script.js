@@ -48,7 +48,7 @@ var elem = document.documentElement;
 var first_time=1;
 var olympic_radius=50;
 var gimmick=800;
-var level_switcher=100;
+var level_switcher=150;
 var stage=0;
 var raji_hospi=0;  //To stall coin increment when hospital icon is displayed!
 var stateProxy = new Proxy(stateCount,  {
@@ -301,7 +301,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
     	if(stateProxy.infected==0){
     		level_switcher-=1;
     		if(level_switcher==0){
-    			level_switcher=100;
+    			level_switcher=150;
     			balls=[];
     			hospitals=[];
     			gimmick=800;
