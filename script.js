@@ -11,7 +11,7 @@ var CANVAS_WIDTH, CANVAS_HEIGHT;
 var gcounter = 0;  
 var cl = CANVAS_WIDTH;
 var interval, intervalActive;
-var stateCount = { population: 0, fixedpopulation: 0, lockedpopulation: 0, infected: 0, immunized: 0, uninfected: 0, dead:0, coins_hospi: 0, coins_lock:0, score: 0, saved: 0, vaccines: 0};
+var stateCount = { population: 0, fixedpopulation: 0, lockedpopulation: 0, infected: 0, immunized: 0, uninfected: 0, dead:0, coins_hospi: 0, score: 0, saved: 0, vaccines: 0};
 var r=6;  //Radius
 var global_r=6;
 var touchesInAction = {};  //For mouse/touch event identification
@@ -35,7 +35,7 @@ var dead=0;
 var hospital_radius_factor=10;
 var healtimer=800;//800;
 var housetimer=200;
-var hospitaltimer=100;  //300
+var hospitaltimer=80;  //300
 var slowVal = 1.5;  //Slow the bounced off infected ball
 var slowVal_hospi = 1.5;  //Slow balls which enter hospital
 var speed=247;  //247
@@ -48,20 +48,12 @@ var elem = document.documentElement;
 var first_time=1;
 var olympic_radius=50;
 var gimmick=800;
-var level_switcher=150;
+var level_switcher=550;
 var stage=0;
 var raji_hospi=0;  //To stall coin increment when hospital icon is displayed!
 var stateProxy = new Proxy(stateCount,  {
     set: function(target, key, value)  {
         target[key] = value;
-/*        var populatioN = document.getElementById("Total");
-        populatioN.innerHTML = stateCount.population;
-        var uninfecteD = document.getElementById("Uninfected");
-        uninfecteD.innerHTML = stateCount.uninfected;
-        var deaD = document.getElementById("Dead");
-        deaD.innerHTML = stateCount.dead;
-        var infecteD = document.getElementById("Infected");
-        infecteD.innerHTML = stateCount.infected;*/
         return true;
     }
 });
@@ -84,10 +76,9 @@ function restart(){
 	stateProxy.score=0;
 	stateProxy.saved=0;
 	speed=247;
-	stateProxy.coins_lock=0;
 	stateProxy.coins_hospi=0;
+	stateProxy.vaccines=0;
 }
-
 function sleep(milliseconds) {
   const date = Date.now();
   let currentDate = null;
@@ -98,10 +89,14 @@ function sleep(milliseconds) {
 function hospitalOn(){
 	house_on=0;
 	hospital_on=1;
+	document.getElementById("b1_1").style.color="white";
+	document.getElementById("b2_1").style.color="black";
 }
 function houseOn(){
 	hospital_on=0;
 	house_on=1;
+	document.getElementById("b2_1").style.color="white";
+	document.getElementById("b1_1").style.color="black";
 }
 $(document).ready(
 $("#pause_id").click(function pause(){
@@ -251,18 +246,18 @@ function MinPQ() { //Minimum Priority Queue
         this.heap[j] = swap;
     };
 }
-function scorer()  { 
+function scorer()  {/* 
 	ctx_1.beginPath();
 	ctx_1.arc(15,15,r,0,2*Math.PI, false);
 	ctx_1.closePath();
 	ctx_1.fillStyle = "#00CED1";  //"#00C851";  //Green circle--immunized
 	ctx_1.fillText(stateProxy.vaccines,25,20);
-	ctx_1.fill();
+	ctx_1.fill();*/
 	ctx_1.beginPath();
-	ctx_1.arc(15,30,r,0,2*Math.PI, false);
+	ctx_1.arc(15,15,r,0,2*Math.PI, false);
 	ctx_1.closePath();
 	ctx_1.fillStyle = "#ffffff";  //"#00C851";  //Green circle--immunized
-	ctx_1.fillText(stateProxy.dead,25,35);
+	ctx_1.fillText(stateProxy.dead,25,20);
 	ctx_1.fill();
 /*
 	ctx_1.font='12px serif';  //DEAD
@@ -297,19 +292,17 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
         this.p.y = this.p.y + this.v.y * dt;
     };
     this.draw = function() {
-    	console.log('infected',stateProxy.infected);
+    	console.log('infected',stateProxy.coins_hospi);
     	if(stateProxy.infected==0){
     		level_switcher-=1;
     		if(level_switcher==0){
-    			level_switcher=150;
+    			level_switcher=550;
     			balls=[];
     			hospitals=[];
     			gimmick=800;
     			speed+=30;
    				population+=2;
-   				infected+=2;;
-      			stateProxy.coins_lock=0;
-				stateProxy.coins_hospi=0;
+   				infected+=2;
       			makeSim(population,fixedpopulation,lockedpopulation,infected);
         		stateProxy.vaccines=infected;		
     			activateInterval();
@@ -318,7 +311,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
     	}
     	scorer();
 		document.getElementById('n_h').innerHTML = '*'+ parseInt(stateProxy.coins_hospi/4);
-		document.getElementById('n_l').innerHTML = parseInt(stateProxy.coins_lock/4)+'*';
+		document.getElementById('n_l').innerHTML = stateProxy.vaccines+'*';
     	stateProxy.score = stateProxy.saved - stateProxy.dead;
 		if(gimmick>=0)  {
     		gimmick-=1;
@@ -623,14 +616,10 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
         		}
         	if(this.s == 3){
         		this.s=7;
-        		if(ball.r==global_r)
-	   				ball.s = 6;
-	   			else
-	   				ball.s = 0;
+   				ball.s = 0;
         		stateProxy.saved+=1;
             	stateProxy.infected-=1;
            		stateProxy.coins_hospi+=1;
-           		stateProxy.coins_lock+=1;
            		stateProxy.vaccines+=1;
             	sim.predictAll(ball);
         		}
@@ -648,15 +637,11 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
        			}
        		if(ball.s==3){
        			ball.s=7;
-       			if(this.r==global_r)
-       				this.s=6;  //Infected, immunized.
-       			else
-       				this.s=0;
+  				this.s=0;
        			stateProxy.infected-=1;
        			stateProxy.saved+=1;
        			stateProxy.uninfected+=1;
        			stateProxy.coins_hospi+=1;
-       			stateProxy.coins_lock+=1;
        			stateProxy.vaccines+=1;
        			sim.predictAll(this);
        		}
@@ -797,10 +782,12 @@ function Sim(balls) {  //Sim constructor
 							        					balls[i].v.y/=slowVal_hospi;
 							        					balls[i].vabs/=slowVal_hospi;
 							        					if(balls[i].s==1){
-										        						balls[i].s=6;
+										        						if(balls[i].r!=global_r)
+										        							balls[i].s=0;
+										        						else
+										        							balls[i].s=6;
 										        						stateProxy.saved+=1;
 									 		       						stateProxy.coins_hospi+=1;
-									 		       						stateProxy.coins_lock+=1;
 										        						stateProxy.uninfected+=1;
 							        									stateProxy.infected-=1;
 							        					}
@@ -1049,9 +1036,8 @@ function process_touchstart(event)
 	var touches = getClientOffset(event, canvas_1);  //event.touches;changedTouches;
 	if (touches!=undefined)
 		startPosition=touches;
-	if(startPosition!=undefined && hospital_on!=1 && house_on!=1 && plause!=0)
+	if(startPosition!=undefined && hospital_on!=1 && house_on==1 && stateProxy.vaccines>0 && plause!=0)
 	{
-//	console.log('sg',startPosition.x,startPosition.y);
 	if(stateProxy.vaccines>0){
 		velocit.x=0;velocit.y=0;
 	    ctx_1.beginPath();
@@ -1070,7 +1056,7 @@ function process_touchmove(event){
 		lineCoordinates=touches;
 	if(lineCoordinates!=undefined && startPosition!=undefined && plause!=0)
 	{
-		if(hospital_on!=1 && house_on!=1)  {
+		if(hospital_on!=1 && house_on==1 && stateProxy.vaccines>0)  {
 			if(stateProxy.vaccines>0){
 			flag=1;
 			clearCanvas(ctx_2, canvas_2);
@@ -1087,9 +1073,8 @@ function process_touchend(event) {
 	event.preventDefault();  //	var touches = getClientOffset(event, canvas_1);//event.changedTouches;
 	if(event)
 	{
-		if(hospital_on!=1 && house_on!=1 && plause!=0)  {
+		if(hospital_on!=1 && house_on==1 && stateProxy.vaccines>0 && plause!=0)  {
 		if(stateProxy.vaccines>0)  {
-		console.log('vaccines:',stateProxy.vaccines);
 		flag=0;
 		if(velocit.x==0)  velocit.x=immunized_initial_speed_x*posNeg()*Math.random();
 		if(velocit.y==0)  velocit.y=immunized_initial_speed_y*posNeg()*Math.random();
@@ -1112,12 +1097,10 @@ function process_touchend(event) {
 		stateProxy.vaccines-=1;
 	}	clearCanvas(ctx_2, canvas_2);	
 		isDrawStart=false;
-		hospital_on=0;
 		}
 	}
-	else if(hospital_on==1 && plause!=0)  {
-		hospital_on=0;
-		if(stateProxy.coins_hospi>0)  {
+	else if(hospital_on==1 && stateProxy.coins_hospi>3 && plause!=0)  {
+		console.log('var',stateProxy.coins_hospi)
 		var temp_hospi_position = (flag)?lineCoordinates:startPosition;
 		var newBall = new Ball(
 	                temp_hospi_position.x,
@@ -1134,7 +1117,7 @@ function process_touchend(event) {
 			balls.unshift(newBall);
 			hospitals.unshift(newBall);			
 			stateProxy.coins_hospi-=4;
-		}}
+		}/*
 	else if(house_on==1 && plause!=0)  {
 		if(stateProxy.coins_lock>0){
 		var min=Math.pow(startPosition.x-balls[0].p.x,2)+Math.pow(startPosition.y-balls[0].p.y,2);
@@ -1162,6 +1145,6 @@ function process_touchend(event) {
 			stateProxy.coins_lock-=4;
 		}}
 		else house_on=0;
-		}
+		}*/
 	}
 }
