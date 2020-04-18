@@ -296,6 +296,11 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
     };
     this.draw = function() {
     	console.log('lk',stateProxy.saved,stateProxy.infected, set, extra);
+    	if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && screen.orientation.type!="landscape-secondary"){
+    			console.log("Reloading as screen orientation is changed!");
+    			location.reload(true);
+
+    		}
     	if(stateProxy.saved!=0 && stateProxy.saved%5==0 && set==0 && extra==0 && extra2==0){
     		set=1;
     		extra=1;extra2=1;
