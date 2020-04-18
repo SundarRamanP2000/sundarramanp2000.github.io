@@ -158,7 +158,7 @@ $("#play_id").click(function play(){// console.log('2',plause);
 				canvas_3.addEventListener('touchend', process_touchend,false);
         		console.log(CANVAS_HEIGHT,CANVAS_WIDTH);
       			makeSim(population,fixedpopulation,lockedpopulation,infected);
-        		stateProxy.vaccines=infected;
+        		stateProxy.vaccines=parseInt(infected/2);
     			activateInterval();
     			sim.redraw();
        	}
