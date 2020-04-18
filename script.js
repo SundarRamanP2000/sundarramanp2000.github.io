@@ -50,7 +50,7 @@ var olympic_radius=50;
 var gimmick=800;
 var level_switcher=550;
 var stage=0;
-var set=0, gimmick2=0, extra=0;
+var set=0, gimmick2=0, extra=0, extra2=0;
 var stateProxy = new Proxy(stateCount,  {
     set: function(target, key, value)  {
         target[key] = value;
@@ -78,7 +78,7 @@ function restart(){
 	speed=247;
 	stateProxy.coins_hospi=0;
 	stateProxy.vaccines=0;
-	set=0; extra=0; gimmick2=0;
+	set=0; extra=0; gimmick2=0; extra2=0;
 	document.getElementById("b1_1").style.color="black";
 	document.getElementById("b2_1").style.color="black";
 }
@@ -295,15 +295,16 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
         this.p.y = this.p.y + this.v.y * dt;
     };
     this.draw = function() {
-    	console.log('lk',stateProxy.saved);
-    	if(stateProxy.saved!=0 && stateProxy.saved%5==0 && set==0 && extra==0){
+    	console.log('lk',stateProxy.saved,stateProxy.infected, set, extra);
+    	if(stateProxy.saved!=0 && stateProxy.saved%5==0 && set==0 && extra==0 && extra2==0){
     		set=1;
-    		extra=1;
+    		extra=1;extra2=1;
   			document.getElementById("openModal").style.display = 'flex';
     		document.getElementById('stage').style.color = "#003cff";
     		document.getElementById('stage').innerHTML = '+5 saved!';
     		gimmick2=1000;
     	}
+    	if(stateProxy.saved!=1 && stateProxy.saved%5-1==0 && extra2==1) extra2=0;
     	if(gimmick2>0){
     		gimmick2-=1;
     		if(gimmick2==0){
@@ -320,7 +321,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
     			gimmick=800;
     			speed+=30;
    				population+=2;
-   				infected+=2;
+   				infected+=2;set=0;extra=0;extra2=0;
       			makeSim(population,fixedpopulation,lockedpopulation,infected);
         		stateProxy.vaccines=infected;		
     			activateInterval();
@@ -363,7 +364,6 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
 	            		);
 					newBall.vabs = Math.sqrt(Math.pow(temp_v_x,2)+Math.pow(temp_v_y,2));
 					newBall.s=0;--gimmick;
-					console.log(newBall.r);
 					balls.unshift(newBall);  //push()
 			    	}
 		}
@@ -450,7 +450,6 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
             	ctx_1.fill();
 	   			if(this.r!=global_r){
 	   				document.getElementById("gameover").style.display = "flex";
-	   				console.log('js',stateProxy.score);
 	   				document.getElementById("gameover2").innerHTML = "SCORE: "+stateProxy.score;
 	   				deactivateInterval();
         	}}/*
@@ -654,13 +653,14 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
             	stateProxy.infected-=1;
            		stateProxy.coins_hospi+=1;
            		stateProxy.vaccines+=1;
-           		if(this.r!=global_r && ball.r==global_r){
+           		if(this.r!=global_r){
+           			if(ball.r==global_r){
            			ball.previous_v=ball.v;
 					ball.previous_s=ball.s;
 					ball.v.x=0;
 					ball.v.y=0;
 					ball.s=2;
-					ball.r*=2;
+					ball.r*=2;}
 					if(extra>0) --extra;
         		}
           	sim.predictAll(ball);
@@ -685,13 +685,14 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
        			stateProxy.uninfected+=1;
        			stateProxy.coins_hospi+=1;
        			stateProxy.vaccines+=1;
-	   		if(ball.r!=global_r && this.r==global_r){
+	   		if(ball.r!=global_r){
+	   			if(this.r==global_r){
            			this.previous_v=this.v;
 					this.previous_s=this.s;
 					this.v.x=0;
 					this.v.y=0;
 					this.s=2;
-					this.r*=2;
+					this.r*=2;}
 					if(extra>0) --extra;
         		}       			
        			sim.predictAll(this);
@@ -700,13 +701,14 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
        	else if((this.s==0 || this.s==6) && ball.s==3){
 	   			ball.s=7;
        			stateProxy.vaccines+=1;
-   	       		if(ball.r!=global_r && this.r==global_r){
+   	       		if(ball.r!=global_r){
+   	       		if(this.r==global_r){
            			this.previous_v=this.v;
 					this.previous_s=this.s;
 					this.v.x=0;
 					this.v.y=0;
 					this.s=2;
-					this.r*=2;
+					this.r*=2;}
 					if(extra>0) --extra;
         		}
        			sim.predictAll(this);
@@ -714,13 +716,14 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
        	else if((ball.s==0 || ball.s==6) && this.s==3){
        			this.s=7;
        			stateProxy.vaccines+=1;
-    			if(this.r!=global_r && ball.r==global_r){
+    			if(this.r!=global_r){
+    			if(ball.r==global_r){
            			ball.previous_v=ball.v;
 					ball.previous_s=ball.s;
 					ball.v.x=0;
 					ball.v.y=0;
 					ball.s=2;
-					ball.r*=2;
+					ball.r*=2;}
 					if(extra>0) --extra;
         		}       					
        			sim.predictAll(ball);
@@ -747,7 +750,6 @@ function SimEvent(time, a, b) {  //SimEvent constructor -- If FIRST is null => v
         // Note: this check forces only one event at a given instant
         if (this.time < simTime) {
             log += 'Event precedes simulation time';
-            //  console.log(log);
             return false;
         }
         if (a === null) { //vertical wall
