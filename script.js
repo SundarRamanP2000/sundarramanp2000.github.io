@@ -323,7 +323,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
    				population+=2;
    				infected+=2;set=0;extra=0;extra2=0;
       			makeSim(population,fixedpopulation,lockedpopulation,infected);
-        		stateProxy.vaccines=infected;		
+        		stateProxy.vaccines=parseInt(infected/2);		
     			activateInterval();
     			sim.redraw();
     			}	
