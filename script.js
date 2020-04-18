@@ -12,8 +12,8 @@ var gcounter = 0;
 var cl = CANVAS_WIDTH;
 var interval, intervalActive;
 var stateCount = { population: 0, fixedpopulation: 0, lockedpopulation: 0, infected: 0, immunized: 0, uninfected: 0, dead:0, coins_hospi: 0, score: 0, saved: 0, vaccines: 0};
-var r=6;  //Radius
-var global_r=6;
+var r=5;  //Radius
+var global_r=5;
 var touchesInAction = {};  //For mouse/touch event identification
 var isDrawStart, startPosition, lineCoordinates;
 var ms = 30;  //Other parameters and objects
@@ -26,7 +26,7 @@ var velocit = {x: 0, y: 0};  //For newly created balls by click/mouse.
 var max_velocit=5000; //Maxium velocity of newly created balls^|^
 var elasticity=0.9;  //Co-efficient of restitution of collision!
 ///BEGIN:   Toy parameters for good UX!
-var population=10;  //Total population 
+var population=8;  //Total population 
 var fixedpopulation=0;  //Initial fixed population (part of 'population')
 var lockedpopulation=0;
 var infected=3;
@@ -38,7 +38,7 @@ var housetimer=200;
 var hospitaltimer=100;  //300
 var slowVal = 1.5;  //Slow the bounced off infected ball
 var slowVal_hospi = 1.5;  //Slow balls which enter hospital
-var speed=247;  //247
+var speed=207;  //247
 var crem=40;  //Time after death!
 var min_touch=8000;  //Empirical obsv.
 var immunized_initial_speed_x=100;  //Initial speed of immunized in x direction!
@@ -188,13 +188,13 @@ function openFullscreen(){
 	document.getElementById('button').style.display = 'none';
 	document.getElementById('band').style.display = 'none';
   if (elem.requestFullscreen) {
-    elem.requestFullscreen(); ScreenOrientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+    elem.requestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
   } 
   if (elem.mozRequestFullScreen) { /* Firefox */
     elem.mozRequestFullScreen(); ScreenOrientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
   } 
    if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-    elem.webkitRequestFullscreen(); ScreenOrientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+    elem.webkitRequestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
   } 
    if (elem.msRequestFullscreen) { /* IE/Edge */
     elem.msRequestFullscreen(); ScreenOrientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
@@ -302,7 +302,6 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
     	if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && screen.orientation.type!="landscape-secondary"){
     			console.log("Reloading as screen orientation is changed!");
     			location.reload(true);
-
     		}
     	if(stateProxy.saved!=0 && stateProxy.saved%5==0 && set==0 && extra==0 && extra2==0){
     		set=1;
@@ -327,9 +326,9 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
     			balls=[];
     			hospitals=[];
     			gimmick=800;
-    			speed+=30;
+    			speed+=35;
    				population+=2;
-   				infected+=2;set=0;extra=0;extra2=0;
+   				infected+=1;set=0;extra=0;extra2=0;
       			makeSim(population,fixedpopulation,lockedpopulation,infected);
         		stateProxy.vaccines=parseInt(infected/2);		
     			activateInterval();
@@ -469,7 +468,6 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
 	   			balls.splice(balls.indexOf(this),1);	
    	   		}
         else {
-        	
 		        ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
 		        ctx_1.fillStyle = "#ffffff";  //'rgba(0,255,0,1)';  //"#00c851"  //Green
             	ctx_1.fill();
@@ -535,7 +533,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
            ctx_1.arc(this.p.x, this.p.y, this.r, 0, 2 * Math.PI);
 		switch (this.s) {
             case 0:
-    			if(this.r==10.5)  {
+    			if(this.r==8.75)  {
     				ctx_1.fillStyle = "#ffffff";
 					ctx_1.font='12px serif';
             		ctx_1.fillText('SCORE: '+stateProxy.score,CANVAS_WIDTH/2-35,15);
@@ -558,7 +556,7 @@ function Ball(posX, posY, velX, velY, r, healtimer, housetimer, hospitaltimer, c
 					case 9:  ctx_1.fillStyle = 'rgba(255,0,0,0.95)';  break;
 				    case 10:  ctx_1.fillStyle = 'rgba(255,0,0,1)';  break;
                 }
-                if(this.r==10.5)  {
+                if(this.r==8.75)  {
 	    			ctx_1.font='12px serif';
        				ctx_1.fillText('SCORE: '+stateProxy.score,CANVAS_WIDTH/2-35,15);
        			}
@@ -1147,7 +1145,7 @@ function process_touchmove(event){
 			clearCanvas(ctx_2, canvas_2);
 			lineCoordinates.x=2*startPosition.x-lineCoordinates.x;
 			lineCoordinates.y=2*startPosition.y-lineCoordinates.y;
-			arrow(ctx_2,startPosition,lineCoordinates,10);
+			arrow(ctx_2,startPosition,lineCoordinates,5);
 			}
 		}
 		else
@@ -1179,7 +1177,7 @@ function process_touchend(event) {
 	if(validateNewBall(newBall, newBall)){
 		if(set>0){
 			--set;
-			newBall.r=6.5;
+			newBall.r=5.5;
 		}
 		balls.unshift(newBall);  //push()
 		stateProxy.immunized+=1;
