@@ -185,19 +185,19 @@ $("#play_id").click(function play(){// console.log('2',plause);
         	}
 ));
 function openFullscreen(){
-	var button = document.getElementById('button');
-	button.style.display = 'none';
+	document.getElementById('button').style.display = 'none';
+	document.getElementById('band').style.display = 'none';
   if (elem.requestFullscreen) {
-    elem.requestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+    elem.requestFullscreen(); ScreenOrientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
   } 
   if (elem.mozRequestFullScreen) { /* Firefox */
-    elem.mozRequestFullScreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+    elem.mozRequestFullScreen(); ScreenOrientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
   } 
    if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-    elem.webkitRequestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+    elem.webkitRequestFullscreen(); ScreenOrientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
   } 
    if (elem.msRequestFullscreen) { /* IE/Edge */
-    elem.msRequestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
+    elem.msRequestFullscreen(); ScreenOrientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
 }}
 function MinPQ() { //Minimum Priority Queue
     this.heap = [null];

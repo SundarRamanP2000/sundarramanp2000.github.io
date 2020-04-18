@@ -16,12 +16,13 @@
 </head> 
 
 <body>  
+
 <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px; display: block;" id="band">
-    <h2 class="w3-wide">COVID CHAOS</h2>
+    <h2 class="w3-wide"><font color='red'>COVID</font> CHAOS</h2>
     <p class="w3-opacity"><i>#stayhome#savelives</i></p>
     <p class="w3-justify">
-        While staying at home, save lives in a chaotic situation by targeting vaccines to uninfect, constructing clinics to immunize and quarantine balls to control the spread of infection using your physics/snooker skills!
-    </p>
+        &nbsp; &nbsp; While staying at home, save lives in a chaotic scenario by targeting vaccines<span class="dot" style="height: 15px;width: 15px;background-color:#00CED1;border-radius:50%;display: inline-block;"></span> to uninfect<span class="dot" style="height: 15px;width: 15px;background-color:#8c8c8c;border-radius:50%;display: inline-block;"></span> the infected<span class="dot" style="height: 15px;width:15px;background-color:rgba(255,0,0,1);border-radius:50%;display: inline-block;"></span>, constructing clinics to immunize<span class="dot" style="height: 15px;width: 15px;background-color:rgba(0,255,0,1);border-radius:50%;display: inline-block;"></span>
+ and quarantine balls to control the spread of infection using your physics/snooker skills! Save balls from dying to earn clinics and special vaccines. Game ends when you (biggest ball on screen) die. <br></br> <align="center"> <p align="center"> SCORE = #saved - #dead <br></br> PS: Remember the color codes:) </p></p>
 <button id="button" style="position: absolute; left:50%;transform: translate(-50%, 0%);" onclick="openFullscreen()">Open Full Screen</button>    
 </div>
 
@@ -29,7 +30,7 @@
 	<canvas id="canvas_2"></canvas><canvas id="canvas_3"></canvas>   
     <div id="openModal" class="modalDialog one">
      <div>  
-        <h2 id="stage">STAGE 0</h2>
+        <h2 id="stage" style="font-size: 18px">STAGE 0</h2>
     </div>
     </div>
     
@@ -53,29 +54,28 @@
     id="gameover">
     <div>
         <h2 id="gameover1" style="color: red; font-size: 40px;">GAME OVER</h2>
-        <h3 id="gameover2" align="center" style="color: black; font-size: 20px">SCORE: 0</h3> 
-    <button align="center" type="submit" class="btn two" onclick="restart()" style="
+        <h3 id="gameover2" align="center" style="color: black; font-size: 20px">SCORE: 0</h3> <br></br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button align="center" type="submit" class="btn two" onclick="restart()" style="
   display: inline-block;
   background-color: #4CAF50;
   color: white;
-  padding: 16px 20px;
+  padding: 16px 22px;
   border: none;
   cursor: pointer;
-  width: 85%;
+  width: 80%;
   text-align: center;
   margin-bottom:10px;
   opacity: 0.8;
     ">Play Again!</button> <br/><br/>
-           <!h4 id="gameover1" align="center" style="color: black; font-size: 20px;"><!/h4>
        </div>
     </div>
 
          <button type="button" id="b1" class="btn btn-danger btn-circle btn-lg" style="display: block;  position: absolute; bottom:10px; left:10px;background-color: rgba(0,255,0,1);"onclick="hospitalOn()"><i id="b1_1" class="fas fa-clinic-medical" aria-hidden="true" style=" position: absolute; bottom:7px; left:4px; color:black; font-size:38px"></i></button>
-            <p id="n_h" style=" position: absolute; bottom:3.5px; left:80.5px; font-size: 20px; color:rgba(0,255,0,1);">*0</p>
-         <button class="btn" id="play_id" style="position: absolue; left: 47%; bottom: 10px; transform: translate(-50%, 0%)"><i class="fa fa-play" id="play_i"></i></button>
+            <p id="n_h" style=" position: absolute; bottom:3.5px; left:60.5px; font-size: 20px; color:rgba(0,255,0,1);">*0</p>
+         <button class="btn" id="play_id" style="position: absolue; left: 50%; bottom: 10px; transform: translate(-50%, 0%)"><i class="fa fa-play" id="play_i"></i></button>
          <button type="button" id="b2" class="btn btn-info btn-circle btn-lg" style="display: block; position: absolute; bottom:10px; right:10px;background-color: #00CED1;"
          onclick="houseOn()"><i id="b2_1" class="fas fa-syringe" aria-hidden="true" style="position: absolute; bottom:6px; left:8px; color: black; font-size:36px;"></i></button>
-        <p id="n_l" style=" position: absolute; bottom:4px; right: 80.5px; font-size: 20px; color:#00CED1">0*</p>
+        <p id="n_l" style=" position: absolute; bottom:4px; right: 60.5px; font-size: 20px; color:#00CED1">0*</p>
   </div>
 </body>
 
