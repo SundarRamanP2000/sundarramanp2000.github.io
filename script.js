@@ -189,11 +189,14 @@ function openFullscreen(){
 	button.style.display = 'none';
   if (elem.requestFullscreen) {
     elem.requestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
-  } else if (elem.mozRequestFullScreen) { /* Firefox */
+  } 
+  if (elem.mozRequestFullScreen) { /* Firefox */
     elem.mozRequestFullScreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
-  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+  } 
+   if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
     elem.webkitRequestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
-  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+  } 
+   if (elem.msRequestFullscreen) { /* IE/Edge */
     elem.msRequestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
 }}
 function MinPQ() { //Minimum Priority Queue
