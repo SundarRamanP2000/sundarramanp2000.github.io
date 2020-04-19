@@ -20,10 +20,12 @@
 <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px; display: block;" id="band">
     <h2 class="w3-wide"><font color='red'>COVID</font> CHAOS</h2>
     <p class="w3-opacity"><i>#stayhome#savelives</i></p>
-    <p class="w3-justify">
+    <p class="w3-justify" id="instr1">
         &nbsp; &nbsp; While staying at home, save lives in a chaotic scenario by targeting vaccines<span class="dot" style="height: 15px;width: 15px;background-color:#00CED1;border-radius:50%;display: inline-block;"></span> to uninfect<span class="dot" style="height: 15px;width: 15px;background-color:#8c8c8c;border-radius:50%;display: inline-block;"></span> the infected<span class="dot" style="height: 15px;width:15px;background-color:rgba(255,0,0,1);border-radius:50%;display: inline-block;"></span>, constructing clinics to immunize<span class="dot" style="height: 15px;width: 15px;background-color:rgba(0,255,0,1);border-radius:50%;display: inline-block;"></span>
- and quarantine balls to control the spread of infection using your physics/snooker skills! Save balls from dying to earn clinics and special vaccines. Game ends when you (biggest ball on screen) die. <br></br> <align="center"> <p align="center"> SCORE = #saved - #dead <br></br> PS: Remember the color codes:) </p></p>
+ and quarantine balls to control the spread of infection using your physics/snooker skills! Earn a 'clinic' and 'quarantining vaccines' after saving every 5 from dying. Game ends when you (biggest ball on screen) die. <br></br> <align="center"> <p align="center" id="instr5"> SCORE = #saved - #dead <br></br> PS: Remember the color codes:) </p></p>
 <button id="button" style="position: absolute; left:50%;transform: translate(-50%, 0%);" onclick="openFullscreen()">Open Full Screen</button>    
+<p class="w3-justify" id="instr2" style="display: none;">&nbsp;&nbsp; Click on vaccine icon<i class="fas fa-syringe" style=" color: #00CED1; font-size:18px;"></i>, then click on screen and drag to aim vaccine<span class="dot" style="height: 15px;width: 15px;background-color:#00CED1;border-radius:50%;display: inline-block;"></span> at an infected<span class="dot" style="height: 15px;width:15px;background-color:rgba(255,0,0,1);border-radius:50%;display: inline-block;"></span> ball to cure it temporarily. The length of arrow denotes the speed.</p>
+<p class="w3-justify" id="instr3" style="display: none;">&nbsp;&nbsp;Click on clinic icon<i class="fas fa-clinic-medical" style=" color: rgba(0,255,0,1); font-size:18px;"></i>, then click on screen to construct clinic and immunize<span class="dot" style="height: 15px;width: 15px;background-color:rgba(0,255,0,1);border-radius:50%;display: inline-block;"></span> balls that enter it.</p>
 </div>
 
     <div id="canvas"><canvas id="canvas_1"></canvas>

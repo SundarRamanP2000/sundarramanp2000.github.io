@@ -38,7 +38,7 @@ var housetimer=200;
 var hospitaltimer=100;  //300
 var slowVal = 1.5;  //Slow the bounced off infected ball
 var slowVal_hospi = 1.5;  //Slow balls which enter hospital
-var speed=207;  //247
+var speed=177;  //247
 var crem=40;  //Time after death!
 var min_touch=8000;  //Empirical obsv.
 var immunized_initial_speed_x=100;  //Initial speed of immunized in x direction!
@@ -81,6 +81,8 @@ function restart(){
 	set=0; extra=0; gimmick2=0; extra2=0;
 	document.getElementById("b1_1").style.color="black";
 	document.getElementById("b2_1").style.color="black";
+	document.getElementById('instr2').style.display = 'inline-block';
+	document.getElementById('instr3').style.display = 'inline-block';
 }
 function sleep(milliseconds) {
   const date = Date.now();
@@ -113,6 +115,8 @@ $(document).ready(
 $("#play_id").click(function play(){// console.log('2',plause);
         if(plause==0){
         	if(first_time==1){
+    			document.getElementById('instr2').style.display = 'none';
+				document.getElementById('instr3').style.display = 'none';
         		first_time=0;
         		hospital_on=0;
         		house_on=0;
@@ -186,7 +190,10 @@ $("#play_id").click(function play(){// console.log('2',plause);
 ));
 function openFullscreen(){
 	document.getElementById('button').style.display = 'none';
-	document.getElementById('band').style.display = 'none';
+	document.getElementById('instr1').style.display = 'none';
+	document.getElementById('instr5').style.display = 'none';
+	document.getElementById('instr2').style.display = 'inline-block';
+	document.getElementById('instr3').style.display = 'inline-block';
   if (elem.requestFullscreen) {
     elem.requestFullscreen(); screen.orientation.lock("landscape-secondary"); document.getElementById("canvas").style.display="block";
   } 
